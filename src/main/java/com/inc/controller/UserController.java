@@ -28,12 +28,20 @@ public class UserController {
 	private HttpSession session;
 	
 	@RequestMapping(value= {"/user/signin","/"}, method=RequestMethod.GET)
-	public String signinGet(Model model) {
+	public String signinGet(@RequestParam(value = "fail", required = false) String fail,
+							@RequestParam(value = "signout", required = false) String signout, 
+							Model model) {
 		model.addAttribute("user", new User());
+		if (fail != null) {
+			model.addAttribute("fail", "아이디 또는 비밀번호가 올바르지 않습니다.");
+		}
+		if (signout != null) {
+			model.addAttribute("signout", "로그아웃 되었습니다.");
+		}
 		return "/user/signin";
 	}
 	
-	@RequestMapping(value="/user/signin", method=RequestMethod.POST)
+	/*@RequestMapping(value="/user/signin", method=RequestMethod.POST)
 	public String signinPost(@ModelAttribute User user, BindingResult bindingResult) {
 		User existUser = userService.selectOne(user.getId());
 		if(existUser == null) {
@@ -48,7 +56,7 @@ public class UserController {
 		}
 		session.setAttribute("user", existUser);
 		return "redirect:/main";
-	}
+	}*/
 	
 	@RequestMapping(value="/user/signup", method=RequestMethod.GET)
 	public String signupGet(Model model) {

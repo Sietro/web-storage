@@ -1,21 +1,21 @@
 package com.inc.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.inc.dao.UserDao;
 import com.inc.domain.User;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private UserDao userDao;
@@ -101,6 +101,15 @@ public class UserService {
 		helper.setSubject(subject);
 		helper.setText(content);
 		mailSender.send(msg);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+		User user = userDao.selectOne(id);
+		if(user == null) {
+			throw new UsernameNotFoundException("아이디 또는 비밀번호가 올바르지 않습니다.");
+		}
+		return user;
 	}
 	
 }

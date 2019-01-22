@@ -20,12 +20,23 @@
 			<div class="row">
 				<div class="col-sm-5 col-sm-offset-3">
 					<form:form action="/user/signin" method="post" modelAttribute="user" class="form form-horizontal">
+						<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }" />
+						<c:if test="${fail != null }">
+				  	<script>
+				  		alert('${fail}');
+				  	</script>
+						</c:if>
+						<c:if test="${signout != null }">
+				  	<script>
+				  		alert('${signout}');
+				  	</script>
+						</c:if>
 						<div class="col-xs-9">
 							<div class="row">
 								<div class="form-group">
 									<form:label path="id" class="control-label col-xs-4 text-center">아이디</form:label>
 									<div class="col-xs-8">
-										<form:input path="id" class="form-control" />
+										<form:input path="id" name="id" class="form-control" />
 										<form:errors path="id" class="text-danger"/>											
 									</div>
 								</div>	
@@ -34,7 +45,7 @@
 								<div class="form-group">
 									<form:label path="password" class="control-label col-xs-4 text-center" >암호</form:label>
 									<div class="col-xs-8">
-										<form:password path="password" class="form-control" />
+										<form:password path="password" name="password" class="form-control" />
 										<form:errors path="password" class="text-danger"/>
 									</div>
 								</div>

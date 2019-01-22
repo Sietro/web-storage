@@ -1,9 +1,15 @@
 package com.inc.domain;
 
+import java.util.Collection;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-public class User {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+public class User implements UserDetails {
 	@Pattern(regexp="[A-Za-z0-9]{5,20}", message="알파벳 대소문자 및 숫자, 5~20 글자 이내")
 	private String id;
 	
@@ -41,12 +47,15 @@ public class User {
 	private String address2;
 	private String address;
 	
+	private List<Authority> authorities;
+	
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
+	@Override
 	public String getPassword() {
 		return password;
 	}
@@ -124,6 +133,36 @@ public class User {
 	}
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return authorities;
+	}
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return id;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 	
 	
