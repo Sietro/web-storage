@@ -9,12 +9,12 @@
 	<secur:http pattern="/upload/image/**" security="none" />
 	<secur:http pattern="/upload/board/**" security="none" />
 	<secur:http pattern="/favicon.ico" security="none" />
-	
+		
 	<secur:http auto-config="true" use-expressions="true">
 		<secur:intercept-url pattern="/" access="!isAuthenticated()"/>
-		<secur:intercept-url pattern="/user/signin" access="!isAuthenticated()"/>
-		<secur:intercept-url pattern="/user/finduser/*" access="!isAuthenticated()"/>
-		<!-- <secur:intercept-url pattern="/manage/**" access="hasRole('ROLE_ADMIN')"/> -->
+		<secur:intercept-url pattern="/user/**" access="!isAuthenticated()"/>
+		<secur:intercept-url pattern="/board/**" access="permitAll()"/>
+		<secur:intercept-url pattern="/manage/**" access="hasRole('ROLE_ADMIN')"/>
 		<secur:intercept-url pattern="/**" access="isAuthenticated()"/>
 		<secur:form-login login-page="/?signin"
 						login-processing-url="/user/signin"
@@ -25,7 +25,6 @@
 		<secur:logout logout-url="/user/signout"
 					logout-success-url="/?signout"
 					invalidate-session="true"/>		
-
 	</secur:http>
 	<secur:authentication-manager>
 		<secur:authentication-provider user-service-ref="userService" />

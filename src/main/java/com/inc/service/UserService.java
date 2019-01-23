@@ -56,8 +56,6 @@ public class UserService implements UserDetailsService {
 	}
 
 	public void signup(User user) {
-		user.setPhone(user.getPhone1()+user.getPhone2()+user.getPhone3());
-		user.setAddress(user.getAddress1()+" "+user.getAddress2());
 		userDao.signup(user);
 	}
 

@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -84,11 +85,13 @@ public class UserController {
 		return "redirect:/";
 	}
 	
-	@RequestMapping(value="/user/dualCheck", method=RequestMethod.POST)
+	@RequestMapping(value="/user/dualcheck", method=RequestMethod.POST)
 	@ResponseBody
 	public String dualCheck(@RequestParam String id) {
-		User user = userService.selectOne(id);
-		if(user != null) {
+		if("".equals(id)) {
+			return "null";
+		}
+		if(userService.selectOne(id) != null) {
 			return "exist";
 		}
 		return "notexist";
@@ -98,8 +101,9 @@ public class UserController {
 	@ResponseBody
 	public String emailCertify(@RequestParam String email) {
 		if("".equals(email)) {
-			return null;
-		}else if(userService.selectOneByEmail(email) != null) {
+			return "null";
+		}
+		if(userService.selectOneByEmail(email) != null) {
 			return "duplicated";
 		}
 		String emailCode;

@@ -70,23 +70,22 @@
 						<label class="col-xs-3 col-xs-offset-1 control-label">전화번호</label>
 						<div class="col-xs-8">
 							<div class="col-xs-2 phone" style="padding-left: 0;">
-								<form:select path="phone1" class="form-control">
+								<select id="phone1" class="form-control" onchange="makePhone();">
 									<option value="010">010</option>
 									<option value="011">011</option>
 									<option value="019">016</option>
-								</form:select>
+								</select>
 							</div>
 							<div class="col-xs-2">
-								<form:input class="form-control" path="phone2" maxlength="4" />
+								<input class="form-control" id="phone2" maxlength="4" onkeyup="makePhone();"/>
 							</div>
 							<div class="col-xs-2">
-								<form:input class="form-control" path="phone3" maxlength="4" />
+								<input class="form-control" id="phone3" maxlength="4" onkeyup="makePhone();"/>
 							</div>
 						</div>
 						<div class="col-xs-6 col-xs-offset-4">
-							<form:errors path="phone1" class="text-danger" />
-							<form:errors path="phone2" class="text-danger" />
-							<form:errors path="phone3" class="text-danger" />
+							<form:hidden path="phone" id="phone" />
+							<form:errors path="phone" class="text-danger" />
 						</div>
 					</div>
 					<div class="form-group">
@@ -105,7 +104,8 @@
 				  		<input name="certifyCode" class="form-control" placeholder="인증코드 입력"/>
 				  	</div>
 				  	<div class="col-xs-4 col-xs-offset-4">
-				  		<form:errors path="email" id="email-error" class="text-danger" />
+				  		<form:errors path="email" class="text-danger" />
+				  		<span id="email-error" class="text-danger"></span>
 				  	</div>
 			  	</div>
 					<div class="form-group">
@@ -120,11 +120,11 @@
 							</div>
 							<form:errors path="postcode" class="text-danger" />
 							<br />
-							<form:input class="form-control" id="address1" path="address1" readonly="true" />
-							<form:errors path="address1" class="text-danger" />
+							<input class="form-control" id="address1" readonly="readonly" />
 							<br />
-							<form:input class="form-control" id="address2" path="address2" placeholder="상세주소" />
-							<form:errors path="address2" class="text-danger" />
+							<input class="form-control" id="address2" placeholder="상세주소" onkeyup="makeAddress();" />
+							<form:hidden path="address" id="address" />
+							<form:errors path="address" class="text-danger"  />
 						</div>
 					</div>
 					<div class="row">
@@ -146,16 +146,31 @@
  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
  	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
  	<script>
+ 		function makePhone(){
+ 			$("#phone").text("");
+ 			$("#phone").append($("#phone1").val()+$("#phone2").val()+$("#phone3").val());
+ 		}
+ 		
+ 		function makeAddress(){
+ 			$("#address").text("");
+ 			$("#address").append($("#address1").val()+" "+$("#address2").val()); 
+ 		}
+ 	
  		function dualCheck(){
  			$.ajax({
-				url:"/user/dualCheck",
+				url:"/user/dualcheck",
 				type:"post",
 				data:{id:$("#id").val()},
+				beforeSend: function(xhr){
+					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}")
+				},
 				success:function(data){
 					if(data == 'exist'){
 						alert("존재하는 아이디 입니다.");
 					}else if(data == 'notexist'){
 						alert("사용 가능한 아이디 입니다.");
+					}else if(data == 'null'){
+						alert("아이디를 입력해주세요.");
 					}
 				}
  			});
@@ -168,18 +183,21 @@
  				url:"/user/emailcertify",
  				type:"post",
  				data:{email:$("#email").val()},
+ 				beforeSend: function(xhr){
+					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}")
+				},
  				success:function(data){
-					if(data == "null"){
-						$("#email-error").text("이메일을 입력해주세요");
+					if(data == 'null'){
+						$("#email-error").text("이메일을 입력해주세요.");
 					}else if(data == 'duplicated'){
-						$("#email-error").text("이미 가입되어있는 이메일 주소입니다");
+						$("#email-error").text("이미 가입되어있는 이메일 주소입니다.");
 					}else if(data == 'error'){
 						$("#email-error").text("이메일 형식이 올바르지 않습니다.");
 					}else if(data == 'success'){
 						alert("발송완료");
-						$("#email-btn").removeAttr("disabled");
-						$("#email-btn").text("인증메일 발송");
 					}
+					$("#email-btn").removeAttr("disabled");
+					$("#email-btn").text("인증메일 발송");
  				}
  			});
  		}
@@ -189,6 +207,7 @@
 				oncomplete:function(data){
 					$("#postcode").val(data.zonecode);
 					$("#address1").val(data.roadAddress+"("+data.buildingName+")");
+					$("#address").append($("#address1").val());
 				}
 			}).open();
 		}

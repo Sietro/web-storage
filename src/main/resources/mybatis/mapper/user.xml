@@ -3,9 +3,19 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="user">
-	<select id="selectOne" parameterType="String" resultType="User">
+	<select id="selectOne" parameterType="String" resultMap="authorityMap">
 		select * from users where id = #{value}
 	</select>
+	
+	<resultMap type="User" id="authorityMap">
+		<result column="id" property="id"/>
+		<collection property="authorities" column="id" ofType="Authority" select="authorityList"/>
+	</resultMap>
+	
+	<select id="authorityList" parameterType="String" resultType="Authority">
+		select * from authorization where users_id = #{value}
+	</select>
+	
 	<select id="selectOneByEmail" parameterType="String" resultType="User">
 		select * from users where email = #{value}
 	</select>

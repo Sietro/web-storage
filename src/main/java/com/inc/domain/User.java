@@ -27,24 +27,14 @@ public class User implements UserDetails {
 	
 	@Pattern(regexp="01[016]\\d{3,4}\\d{4}", message="잘못된 전화번호 형식")
 	private String phone;
-	@NotNull(message="전화번호를 입력해 주세요.")
-	@Pattern(regexp="01[016]", message="잘못된 전화번호 형식")
-	private String phone1;
-	@Pattern(regexp="\\d{3,4}", message="숫자만 입력해 주세요.")
-	private String phone2;
-	@Pattern(regexp="\\d{4}", message="숫자만 입력해 주세요.")
-	private String phone3;
-	
+		
 	@Pattern(regexp="[A-Za-z0-9]{3,15}@[A-Za-z.]{3,10}", message="알파벳 대소문자 및 숫자")
 	private String email;
 	
 	@Pattern(regexp="[\\d]{1,10}", message="우편번호를 입력해주세요.")
 	private String postcode;
 	
-	@Pattern(regexp="[A-Za-z0-9가-힣()\\s]{1,30}", message="주소를 입력해주세요.")
-	private String address1;
-	@Pattern(regexp="[A-Za-z0-9가-힣()\\s]{1,30}", message="주소를 입력해주세요.")
-	private String address2;
+	@Pattern(regexp="[A-Za-z0-9가-힣()\\s]{1,50}", message="주소를 입력해주세요.")
 	private String address;
 	
 	private List<Authority> authorities;
@@ -80,24 +70,6 @@ public class User implements UserDetails {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public String getPhone1() {
-		return phone1;
-	}
-	public void setPhone1(String phone1) {
-		this.phone1 = phone1;
-	}
-	public String getPhone2() {
-		return phone2;
-	}
-	public void setPhone2(String phone2) {
-		this.phone2 = phone2;
-	}
-	public String getPhone3() {
-		return phone3;
-	}
-	public void setPhone3(String phone3) {
-		this.phone3 = phone3;
-	}
 	public String getEmail() {
 		return email;
 	}
@@ -109,18 +81,6 @@ public class User implements UserDetails {
 	}
 	public void setPostcode(String postcode) {
 		this.postcode = postcode;
-	}
-	public String getAddress1() {
-		return address1;
-	}
-	public void setAddress1(String address1) {
-		this.address1 = address1;
-	}
-	public String getAddress2() {
-		return address2;
-	}
-	public void setAddress2(String address2) {
-		this.address2 = address2;
 	}
 	public String getPhone() {
 		return phone;
