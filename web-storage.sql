@@ -37,8 +37,8 @@ create table authorization(
 create sequence seq_authorization_id;
 
 insert into authorization values(seq_authorization_id.nextval, 'admin', 'ROLE_ADMIN');
-
-create table board(
+--------------------------------------------------------------------------------- 1월 23 이전
+create table notice(
     id number primary key,
     users_id varchar2(20) references users(id),
     title varchar2(100) not null,
@@ -47,5 +47,37 @@ create table board(
     ip varchar2(30) not null,
     regdate date
 );
-create sequence seq_board_id;
-insert into board values(seq_board_id.nextval, 'admin', '테스트용', '테스트를 위한 게시물 입니다.', 10, '192.168.0.25', sysdate);
+create sequence seq_notice_id;
+
+drop sequence seq_board_id;
+drop table board;
+select * from board;
+
+insert into notice values(seq_notice_id.nextval, 'admin', '테스트용', '테스트를 위한 게시물 입니다.', 10, '192.168.0.25', sysdate);
+---------------------------------------------------------------------------------
+create table qna(
+    id number primary key,
+    users_id varchar2(20) references users(id),
+    title varchar2(100) not null,
+    content clob not null,
+    hit number,
+    ip varchar2(30) not null,
+    regdate date
+);
+create sequence seq_qna_id;
+
+insert into qna values(seq_qna_id.nextval, 'admin', '테스트용', '테스트를 위한 게시물 입니다.', 10, '192.168.0.25', sysdate);
+
+------------------------------------------------------------------------------------
+create table notice_reply(
+    id number primary key,
+    board_id number references notice(id) on delete cascade,
+    users_id varchar2(20) references users(id),
+    content varchar2(300) not null,
+    regdate date,
+    ref number, 
+    depth number, 
+    step number
+);
+create sequence seq_notice_reply_id;
+select * from notice_reply;
