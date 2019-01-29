@@ -20,8 +20,7 @@
 		select * from users where email = #{value}
 	</select>
 	<insert id="signup" parameterType="User">
-		insert into users values(#{user.id},#{user.password},#{user.name},
-														 #{user.gender},#{user.phone},#{user.email},#{user.postcode},#{user.address})
+		insert into users values(#{id},#{password},#{name},#{gender},#{phone},#{email},#{postcode},#{address})
 	</insert>
 	<select id="finduserId" parameterType="User" resultType="User">
 		select * from users where name = #{name} and phone = #{phone} and email = #{email}

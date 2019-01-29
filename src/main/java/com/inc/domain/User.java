@@ -25,10 +25,10 @@ public class User implements UserDetails {
 	@Pattern(regexp="[fm]", message="잘못된 선택")
 	private String gender;
 	
-	@Pattern(regexp="01[016]\\d{3,4}\\d{4}", message="잘못된 전화번호 형식")
+	@Pattern(regexp="01[016][0-9]{3,4}[0-9]{4}", message="잘못된 전화번호 형식")
 	private String phone;
 		
-	@Pattern(regexp="[A-Za-z0-9]{3,15}@[A-Za-z.]{3,10}", message="알파벳 대소문자 및 숫자")
+	@Pattern(regexp="[A-Za-z0-9]{3,15}@[A-Za-z0-9.]{3,10}", message="알파벳 대소문자 및 숫자")
 	private String email;
 	
 	@Pattern(regexp="[\\d]{1,10}", message="우편번호를 입력해주세요.")

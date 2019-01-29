@@ -66,8 +66,9 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/user/signup", method=RequestMethod.POST)
-	public String signupPost(@ModelAttribute @Valid User user, BindingResult bindingResult,
-			@RequestParam String certifyCode) {
+	public String signupPost(@ModelAttribute @Valid User user, 
+							BindingResult bindingResult,
+							@RequestParam String certifyCode) {
 		if(userService.selectOne(user.getId()) != null) {
 			bindingResult.addError(new FieldError("idExist", "id", user.getId(),
 					false, null, null, "존재하는 아이디 입니다."));
@@ -112,6 +113,7 @@ public class UserController {
 		} catch (MessagingException e) {
 			return "error";
 		}
+		System.out.println(emailCode);
 		session.setAttribute("email", email);
 		session.setAttribute("emailCode", emailCode);
 		return "success";

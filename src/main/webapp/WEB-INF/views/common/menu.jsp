@@ -22,7 +22,7 @@
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
 				<form hidden="true" action="/user/signout" method="post" id="signoutForm">
-					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					<sec:csrfInput/>
 				</form>
 				<li><a href="javascript:formSubmit()"><span class="glyphicon glyphicon-log-out"></span> SignOut</a></li>
 				</sec:authorize>

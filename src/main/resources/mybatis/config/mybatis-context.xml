@@ -8,8 +8,10 @@
   </typeAliases>
   <mappers>
     <mapper resource="mybatis/mapper/user.xml"/>
-    <mapper resource="mybatis/mapper/board.xml"/>
-    <mapper resource="mybatis/mapper/reply.xml"/>
+    <mapper resource="mybatis/mapper/notice.xml"/>
+    <mapper resource="mybatis/mapper/notice_reply.xml"/>
+    <mapper resource="mybatis/mapper/qna.xml"/>
+    <mapper resource="mybatis/mapper/qna_reply.xml"/>
   </mappers>
 </configuration>
 

@@ -1,7 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +19,7 @@
 			</div>
 			<div class="row">
 				<form:form action="/user/signup" method="post" modelAttribute="user" class="form-horizontal">
+					<sec:csrfInput/>
 					<div class="form-group">
 						<form:label path="id" class="col-xs-3 col-xs-offset-1 control-label">아이디</form:label>
 						<div class="col-xs-4">
@@ -77,14 +78,16 @@
 								</select>
 							</div>
 							<div class="col-xs-2">
-								<input class="form-control" id="phone2" maxlength="4" onkeyup="makePhone();"/>
+								<input class="form-control" name="phone2" id="phone2" maxlength="4" onkeyup="makePhone();"
+								value="<%=request.getParameter("phone2") %>"/>
 							</div>
 							<div class="col-xs-2">
-								<input class="form-control" id="phone3" maxlength="4" onkeyup="makePhone();"/>
+								<input class="form-control" name="phone3" id="phone3" maxlength="4" onkeyup="makePhone();"
+								value="<%=request.getParameter("phone3") %>"/>
 							</div>
 						</div>
 						<div class="col-xs-6 col-xs-offset-4">
-							<form:hidden path="phone" id="phone" />
+							<form:hidden path="phone" id="phone" value="${requestScope.phone }" />
 							<form:errors path="phone" class="text-danger" />
 						</div>
 					</div>
@@ -94,14 +97,15 @@
 				  		<div class="input-group">
 					  		<form:input path="email" id="email" class="form-control"/>
 					  		<span class="input-group-btn">
-										<button type="button" class="btn btn-info btn-block" id="email-btn" onclick="emailCertify();">
-							  			인증메일 발송
-							  		</button>
+									<button type="button" class="btn btn-info btn-block" id="email-btn" onclick="emailCertify();">
+						  			인증메일 발송
+						  		</button>
 								</span>
 				  		</div>
 				  	</div>
 				  	<div class="col-xs-2">
-				  		<input name="certifyCode" class="form-control" placeholder="인증코드 입력"/>
+				  		<input name="certifyCode" class="form-control" placeholder="인증코드 입력"
+				  			value="<%=request.getParameter("certifyCode") %>" />
 				  	</div>
 				  	<div class="col-xs-4 col-xs-offset-4">
 				  		<form:errors path="email" class="text-danger" />
@@ -120,10 +124,12 @@
 							</div>
 							<form:errors path="postcode" class="text-danger" />
 							<br />
-							<input class="form-control" id="address1" readonly="readonly" />
+							<input class="form-control" name="address1" id="address1" readonly="readonly" 
+							value="<%=request.getParameter("address1") %>" />
 							<br />
-							<input class="form-control" id="address2" placeholder="상세주소" onkeyup="makeAddress();" />
-							<form:hidden path="address" id="address" />
+							<input class="form-control" name="address2" id="address2" placeholder="상세주소" 
+							onkeyup="makeAddress();" value="<%=request.getParameter("address2") %>"/>
+							<form:hidden path="address" id="address" value="${requestScope.address }" />
 							<form:errors path="address" class="text-danger"  />
 						</div>
 					</div>
@@ -147,13 +153,11 @@
  	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
  	<script>
  		function makePhone(){
- 			$("#phone").text("");
- 			$("#phone").append($("#phone1").val()+$("#phone2").val()+$("#phone3").val());
+ 			$("#phone").val($("#phone1").val()+$("#phone2").val()+$("#phone3").val());
  		}
  		
  		function makeAddress(){
- 			$("#address").text("");
- 			$("#address").append($("#address1").val()+" "+$("#address2").val()); 
+ 			$("#address").val($("#address1").val()+" "+$("#address2").val());
  		}
  	
  		function dualCheck(){

@@ -17,26 +17,29 @@ select * from users;
 insert into users values('admin', 'tnc87409123@', '관리자', 'm', '01075524110', 'tncrja@naver.com', '05707', '서울 송파구 송이로 88(가락대림아파트) 1동');
 select * from user_constraints where table_name = 'USERS';
 
-select * from authority;
 
 create table authority(
     role varchar2(20) primary key check(role like 'ROLE#_%' escape '#' )
 );
+
+select * from authority;
 insert into authority values('ROLE_ADMIN');
 insert into authority values('ROLE_MANAGER');
 insert into authority values('ROLE_USER');
 insert into authority values('ROLE_PROUSER');
 
-select * from authorization;
 
 create table authorization(
     id number primary key,
     users_id varchar2(20) constraint FK_users_id references users(id) on delete cascade,
     role varchar2(20) constraint FK_authority_id references authority(role)
 );
+
+select * from authorization;
 create sequence seq_authorization_id;
 
 insert into authorization values(seq_authorization_id.nextval, 'admin', 'ROLE_ADMIN');
+insert into authorization values(seq_authorization_id.nextval, 'test1', 'ROLE_USER');
 --------------------------------------------------------------------------------- 1월 23 이전
 create table notice(
     id number primary key,
@@ -66,6 +69,7 @@ create table qna(
 );
 create sequence seq_qna_id;
 
+select * from qna;
 insert into qna values(seq_qna_id.nextval, 'admin', '테스트용', '테스트를 위한 게시물 입니다.', 10, '192.168.0.25', sysdate);
 
 ------------------------------------------------------------------------------------
@@ -81,3 +85,19 @@ create table notice_reply(
 );
 create sequence seq_notice_reply_id;
 select * from notice_reply;
+
+------------------------------------------------------------------------------------
+create table qna_reply(
+    id number primary key,
+    board_id number references qna(id) on delete cascade,
+    users_id varchar2(20) references users(id),
+    content varchar2(300) not null,
+    regdate date,
+    ref number, 
+    depth number, 
+    step number
+);
+create sequence seq_qna_reply_id;
+select * from qna_reply;
+select * from user_constraints where table_name = 'QNA_REPLY';
+------------------------------------------------------------ 2019/01/29
