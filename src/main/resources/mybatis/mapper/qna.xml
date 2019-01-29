@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qna_board">
+	<select id="selectListFromBoard" resultType="Board" parameterType="Map">
+		select * from 
+			(select rownum rnum, a.* from 
+				(select * from qna 
+					<if test="#{user_id != 'admin'}">
+						where users_id = #{users_id}
+					</if>
+				 order by regdate desc) 
+			a)
+		where rnum between #{start} and #{end}
+	</select>
+	
+	<select id="totalCount" parameterType="String" resultType="int">
+		select count(*) from qna
+	</select>
+	
+	<insert id="insertBoard" parameterType="Board">
+		insert into qna values(seq_qna_id.nextval, #{users_id}, #{title}, #{content}, 0, #{ip}, sysdate)
+	</insert>
+	
+	<select id="selectOneFromBoard" parameterType="int" resultMap="replyListMap">
+		select * from qna where id = #{value}		
+	</select>
+	
+	<resultMap id="replyListMap" type="Board">
+		<result property="id" column="id"/>
+		<collection property="replyList" ofType="Reply" column="id" select="qna_reply.qna_ReplyList"/>
+	</resultMap>
+	
+	<update id="hitUp" parameterType="int">
+		update qna set hit = hit + 1 where id = #{value}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		delete from qna where id = #{value}
+	</delete>
+	
+	<update id="updateBoard" parameterType="Board">
+		update qna set title = #{title}, content = #{content} where id = #{id}					     
+	</update>
+</mapper>
+
+
+

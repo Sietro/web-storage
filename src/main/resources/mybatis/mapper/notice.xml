@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="notice_board">
+	<select id="selectListFromBoard" resultType="Board" parameterType="Map">
+		select * from 
+			(select rownum rnum, a.* from (select * from notice order by regdate desc) a)
+		where rnum between #{start} and #{end}
+	</select>
+	
+	<select id="totalCount" parameterType="String" resultType="int">
+		select count(*) from notice
+	</select>
+	
+	<insert id="insertBoard" parameterType="Board">
+		insert into notice values(seq_notice_id.nextval, #{users_id}, #{title}, #{content}, 0, #{ip}, sysdate)
+	</insert>
+	
+	<select id="selectOneFromBoard" parameterType="int" resultMap="replyListMap">
+		select * from notice where id = #{value}		
+	</select>
+	
+	<resultMap id="replyListMap" type="Board">
+		<result property="id" column="id"/>
+		<collection property="replyList" ofType="Reply" column="id" select="notice_reply.notice_ReplyList"/>
+	</resultMap>
+	
+	<update id="hitUp" parameterType="int">
+		update notice set hit = hit + 1 where id = #{value}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		delete from notice where id = #{value}
+	</delete>
+	
+	<update id="updateBoard" parameterType="Board">
+		update notice set title = #{title}, content = #{content} where id = #{id}					     
+	</update>
+</mapper>
+
+
+
