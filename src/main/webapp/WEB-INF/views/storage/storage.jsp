@@ -15,6 +15,16 @@
 	<h1>Storage</h1>
 	<sec:authentication property="principal.username" var="username"/>
 	<p>${username }님 안녕하세요</p>
+	<ul>
+		<c:forEach items="${storageList }" var="storage">
+			<c:if test="${storage.type eq 'file' }">
+			<li><a href="/storage/file">${storage.name }</a></li>
+			</c:if>
+			<c:if test="${storage.type eq 'dir' }">
+			<li><a href="/storage/dir?${storage.uid }">${storage.name }</a></li>
+			</c:if>
+		</c:forEach>
+	</ul>
 	<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </body>
