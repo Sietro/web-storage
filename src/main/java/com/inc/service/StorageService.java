@@ -18,10 +18,17 @@ public class StorageService {
 		return storageDao.getList(users_id);
 	}
 
-	public List<Storage> moveDir(String id, String uid) {
+	public List<Storage> moveSubDir(String id, String fs_uid) {
 		Storage storage = new Storage();
 		storage.setUsers_id(id);
-		storage.setUid(uid);
-		return storageDao.moveDir(storage);
+		storage.setFs_uid(fs_uid);
+		return storageDao.moveSubDir(storage);
+	}
+
+	public Storage moveParentDir(String id, String fs_pid) {
+		Storage storage = new Storage();
+		storage.setUsers_id(id);
+		storage.setFs_pid(fs_pid);
+		return storageDao.moveParentDir(storage);
 	}
 }

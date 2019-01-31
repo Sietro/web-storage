@@ -106,17 +106,27 @@ create table file_system(
     fs_uid varchar2(23) constraint fs_uid_uk unique,
     fs_pid varchar2(23) constraint fs_pid_ref references file_system(fs_uid),
     name varchar2(30) not null,
-    type char(4) constraint fs_type_chk check(type in('dir','file'))
+    type char(1) constraint fs_type_chk check(type in('f','d'))
 );
 
 select * from file_system;
-insert into file_system values('admin', 'admin001', null, 'test1', 'dir');
-insert into file_system values('admin', 'admin002', null, 'test2', 'dir');
-insert into file_system values('admin', null, null, 'test3', 'file');
-insert into file_system values('admin', null, null, 'test4', 'file');
+insert into file_system values('admin', 'admin001', null, 'test1', 'd');
+insert into file_system values('admin', 'admin002', null, 'test2', 'd');
+insert into file_system values('admin', null, null, 'test3', 'f');
+insert into file_system values('admin', null, null, 'test4', 'f');
 
-insert into file_system values('admin', null, 'admin001', 'test1_1', 'file');
-insert into file_system values('admin', null, 'admin002', 'test2_2', 'file');
+insert into file_system values('admin', null, 'admin001', 'test1_1', 'f');
+insert into file_system values('admin', null, 'admin002', 'test2_2', 'f');
 
 
 select * from file_system where users_id = 'admin' and fs_pid is null;
+select * from user_constraints where table_name = 'FILE_SYSTEM';
+update file_system set type = 'f' where type = 'file';
+
+alter table file_system drop constraint fs_type_chk;
+alter table file_system modify type char(1);
+alter table file_system  add constraint fs_type_chk check(type in('f','d'));
+select * from file_system where users_id = 'admin' and fs_uid = 'admin001';
+commit;
+
+--------------------------------------------------------------------2019/01/30

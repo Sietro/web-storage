@@ -7,8 +7,12 @@
 		select * from file_system where users_id = #{value} and fs_pid is null 
 	</select>
 	
-	<select id="moveDir" parameterType="Storage" resultType="Storage">
-		select * from file_system where users_id = #{users_id} and fs_pid = #{uid}
+	<select id="moveSubDir" parameterType="Storage" resultType="Storage">
+		select * from file_system where users_id = #{users_id} and fs_pid = #{fs_uid}
+	</select>
+	
+	<select id="moveParentDir" parameterType="Storage" resultType="Storage">
+		select * from file_system where users_id = #{users_id} and fs_uid = #{fs_pid}
 	</select>
 </mapper>
 

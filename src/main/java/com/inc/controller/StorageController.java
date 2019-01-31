@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.inc.domain.Storage;
 import com.inc.domain.User;
 import com.inc.service.StorageService;
 
@@ -19,13 +20,25 @@ public class StorageController {
 	
 	@RequestMapping(value="/main", method=RequestMethod.GET)
 	public String storageGet(@AuthenticationPrincipal User user, Model model) {
-		model.addAttribute("storageList",storageService.getList(user.getId()));
+		model.addAttribute("storage", new Storage());
+		model.addAttribute("storageList", storageService.getList(user.getId()));
 		return "/storage/storage";
 	}
 	
-	@RequestMapping(value="/storage/dir", method=RequestMethod.GET)
-	public String moveDir(@AuthenticationPrincipal User user, @RequestParam String uid, Model model) {
-		model.addAttribute("storageList",storageService.moveDir(user.getId(), uid));
+	@RequestMapping(value="/storage/sub", method=RequestMethod.GET)
+	public String moveSubDir(@AuthenticationPrincipal User user, @RequestParam String fs_uid, Model model) {
+		model.addAttribute("storageList",storageService.moveSubDir(user.getId(), fs_uid));
+		return "/storage/storage";
+	}
+	
+	@RequestMapping(value="/storage/parent", method=RequestMethod.GET)
+	public String moveParentDir(@AuthenticationPrincipal User user, @RequestParam String fs_pid, Model model) {
+		String parent_fs_pid = storageService.moveParentDir(user.getId(), fs_pid).getFs_pid();
+		if(parent_fs_pid == null) {
+			model.addAttribute("storageList",storageService.getList(user.getId()));
+		} else {
+			model.addAttribute("storageList",storageService.moveSubDir(user.getId(), parent_fs_pid));
+		}
 		return "/storage/storage";
 	}
 }

@@ -18,8 +18,12 @@ public class StorageDao {
 		return sqlSession.selectList("storage.getList", users_id);
 	}
 
-	public List<Storage> moveDir(Storage storage) {
-		return sqlSession.selectList("storage.moveDir", storage);
+	public List<Storage> moveSubDir(Storage storage) {
+		return sqlSession.selectList("storage.moveSubDir", storage);
+	}
+
+	public Storage moveParentDir(Storage storage) {
+		return sqlSession.selectOne("storage.moveParentDir", storage);
 	}
 	
 }
