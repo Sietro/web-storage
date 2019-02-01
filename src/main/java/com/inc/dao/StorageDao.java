@@ -22,8 +22,8 @@ public class StorageDao {
 		return sqlSession.selectList("storage.moveSubDir", storage);
 	}
 
-	public Storage moveParentDir(Storage storage) {
-		return sqlSession.selectOne("storage.moveParentDir", storage);
+	public Storage getParentDir(Storage storage) {
+		return sqlSession.selectOne("storage.getParentDir", storage);
 	}
 	
 }
