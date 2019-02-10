@@ -1,5 +1,7 @@
 package com.inc.controller;
 
+import java.util.Iterator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -8,7 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.inc.domain.Storage;
 import com.inc.domain.User;
@@ -19,6 +22,9 @@ public class StorageController {
 	
 	@Autowired
 	private StorageService storageService;
+	
+	@Autowired
+	private MultipartHttpServletRequest multiPartHttpServletRequest;
 	
 	@RequestMapping(value="/main", method=RequestMethod.GET)
 	public String storageGet(@AuthenticationPrincipal User user, Model model) {
@@ -64,8 +70,19 @@ public class StorageController {
 	
 	@RequestMapping(value="/storage/fileupload", method=RequestMethod.POST)
 	public String fileUpload(@RequestParam(defaultValue="root") String location) {
-		System.out.println("성공");
-		System.out.println(location);
+		System.out.println("전송완료");
+		Iterator<String> iterator = multiPartHttpServletRequest.getFileNames();
+	    MultipartFile multipartFile = null;
+	    while(iterator.hasNext()){
+	        multipartFile = multiPartHttpServletRequest.getFile(iterator.next());
+	        if(multipartFile.isEmpty() == false){
+	        	System.out.println("------------- file start -------------");
+	        	System.out.println("name : "+multipartFile.getName());
+	        	System.out.println("filename : "+multipartFile.getOriginalFilename());
+	        	System.out.println("size : "+multipartFile.getSize());
+	        	System.out.println("-------------- file end --------------\n");
+	        }
+	    }
 		return "/storage/storage";
 	}
 }

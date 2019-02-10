@@ -51,32 +51,28 @@
 	<h1>Storage</h1>
 	<sec:authentication property="principal.username" var="username"/>
 	<p>${username }님 안녕하세요</p>
-	<%-- <ul>
-		<c:forEach items="${storageList }" var="storage">
-			<c:if test="${storage.fs_pid != null }">
-			<li><a href="/storage/parent?fs_pid=${storage.fs_pid }">..</a></li>
-			</c:if>
-			<c:if test="${storage.type eq 'd' }">
-			<li><a href="/storage/sub?fs_uid=${storage.fs_uid }">${storage.name }</a></li>
-			</c:if>
-			<c:if test="${storage.type eq 'f' }">
-			<li><a href="/storage/file">${storage.name }</a></li>
-			</c:if>
-		</c:forEach>
-	</ul> --%>
 	<c:set var="location" value="${storageList[0].fs_pid }" />
 	<c:out value="${location }" default="null"/><br>
-	<form action="/storage/fileupload" method="post">
+	<%-- <form action="/storage/fileupload" method="post" enctype="multipart/form-data">
 		<sec:csrfInput/>
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		<div class="filebox">
 			<label for="fileupload">FileUpload</label>
 			<input type="file" 
-						 multiple="multiple" 
-						 title="FileUpload" 
+						 multiple="multiple"
 						 id="fileupload" 
-						 onchange="this.form.submit()" />
+						 onchange="upload();" />
 		</div>
-	</form>
+	</form> --%>
+	<form:form action="/storage/fileupload" method="post" enctype="multipart/form-data">
+		<div class="filebox">
+			<label for="fileupload">FileUpload</label>
+			<input type="file" 
+						 multiple="multiple"
+						 id="fileupload" 
+						 onchange="fileUp(${location });" />
+		</div>
+	</form:form>
 	<form action="/storage/filedownload" method="post">
 		<sec:csrfInput/>
 		<div class="filebox">
@@ -134,16 +130,14 @@
 	<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
  	<script>
-		/* <c:if test="${storage.type eq 'd' }">
-			document.getElementById("form${status.index}").action="/storage/sub"
-		</c:if> 
-		<c:if test="${storage.type eq 'f' }">
-			document.getElementById("form${status.index}").action="/storage/file"
-		</c:if> */
 		function fileUp(location){
 			$.ajax({
 				url:"/storage/fileupload",
+				enctype: 'multipart/form-data',
 				type:"post",
+				processData: false,
+	      contentType: false,
+	      cache: false,
 				data:{location:location},
 				beforeSend: function(xhr){
 					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}")
