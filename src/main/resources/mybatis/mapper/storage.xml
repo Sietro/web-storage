@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="storage">
 	<select id="getList" parameterType="String" resultType="Storage">
-		select * from file_system where users_id = #{value} and fs_pid is null 
+		select * from file_system where users_id = #{value} and fs_pid is null order by regdate asc
 	</select>
 	
 	<select id="moveSubDir" parameterType="Storage" resultType="Storage">
@@ -13,6 +13,19 @@
 	
 	<select id="getParentDir" parameterType="Storage" resultType="Storage">
 		select * from file_system where users_id = #{users_id} and fs_uid = #{fs_pid}
+	</select>
+	
+	<insert id="makeDir" parameterType="Storage">
+		<if test="fs_pid != 'root'">
+			insert into file_system values(#{users_id}, #{fs_uid}, #{fs_pid}, #{name}, 'd', sysdate)
+		</if>
+		<if test="fs_pid == 'root'">
+			insert into file_system values(#{users_id}, #{fs_uid}, null, #{name}, 'd', sysdate)
+		</if>
+	</insert>
+	
+	<select id="uidDualCheck" parameterType="String" resultType="Storage">
+		select * from file_system where fs_uid = #{value}
 	</select>
 </mapper>
 

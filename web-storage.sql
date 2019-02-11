@@ -103,20 +103,21 @@ select * from user_constraints where table_name = 'QNA_REPLY';
 ------------------------------------------------------------ 2019/01/29
 create table file_system(
     users_id varchar2(20) constraint fs_user_id_fk references users(id),
-    fs_uid varchar2(23) constraint fs_uid_uk unique,
-    fs_pid varchar2(23) constraint fs_pid_ref references file_system(fs_uid),
+    fs_uid varchar2(260 BYTE) constraint fs_uid_uk unique,
+    fs_pid varchar2(260 BYTE) constraint fs_pid_ref references file_system(fs_uid),
     name varchar2(30) not null,
-    type char(1) constraint fs_type_chk check(type in('f','d'))
+    type char(1) constraint fs_type_chk check(type in('f','d')),
+    regdate date not null
 );
 
 select * from file_system;
-insert into file_system values('admin', 'admin001', null, 'test1', 'd');
-insert into file_system values('admin', 'admin002', null, 'test2', 'd');
-insert into file_system values('admin', null, null, 'test3', 'f');
-insert into file_system values('admin', null, null, 'test4', 'f');
+insert into file_system values('admin', 'admin001', null, 'test1', 'd', sysdate);
+insert into file_system values('admin', 'admin002', null, 'test2', 'd', sysdate);
+insert into file_system values('admin', null, null, 'test3', 'f', sysdate);
+insert into file_system values('admin', null, null, 'test4', 'f', sysdate);
 
-insert into file_system values('admin', null, 'admin001', 'test1_1', 'f');
-insert into file_system values('admin', null, 'admin002', 'test2_2', 'f');
+insert into file_system values('admin', null, 'admin001', 'test1_1', 'f', sysdate);
+insert into file_system values('admin', null, 'admin002', 'test2_2', 'f', sysdate);
 
 
 select * from file_system where users_id = 'admin' and fs_pid is null;
@@ -126,6 +127,8 @@ update file_system set type = 'f' where type = 'file';
 alter table file_system drop constraint fs_type_chk;
 alter table file_system modify type char(1);
 alter table file_system  add constraint fs_type_chk check(type in('f','d'));
+alter table file_system modify fs_uid varchar2(260 BYTE);
+alter table file_system modify fs_pid varchar2(260 BYTE);
 select * from file_system where users_id = 'admin' and fs_uid = 'admin001';
 commit;
 

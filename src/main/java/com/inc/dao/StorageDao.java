@@ -25,5 +25,13 @@ public class StorageDao {
 	public Storage getParentDir(Storage storage) {
 		return sqlSession.selectOne("storage.getParentDir", storage);
 	}
+
+	public void makeDir(Storage storage) {
+		sqlSession.insert("storage.makeDir", storage);
+	}
+	
+	public Storage uidDualCheck(String randomString) {
+		return sqlSession.selectOne("storage.uidDualCheck", randomString);
+	}
 	
 }

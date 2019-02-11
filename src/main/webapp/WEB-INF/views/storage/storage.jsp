@@ -51,8 +51,9 @@
 	<h1>Storage</h1>
 	<sec:authentication property="principal.username" var="username"/>
 	<p>${username }님 안녕하세요</p>
+	<p>${storageList[0].fs_pid }</p>
 	<c:set var="location" value="${storageList[0].fs_pid }" />
-	<c:out value="${location }" default="null"/><br>
+	<c:out value="${location }" default="root"/><br>
 	<%-- <form action="/storage/fileupload" method="post" enctype="multipart/form-data">
 		<sec:csrfInput/>
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
@@ -64,16 +65,17 @@
 						 onchange="upload();" />
 		</div>
 	</form> --%>
-	<form:form action="/storage/fileupload" method="post" enctype="multipart/form-data">
+	<form action="/storage/file/upload" method="post" enctype="multipart/form-data">
 		<div class="filebox">
 			<label for="fileupload">FileUpload</label>
 			<input type="file" 
 						 multiple="multiple"
 						 id="fileupload" 
-						 onchange="fileUp(${location });" />
+						 name="fileupload"
+						 onchange="this.form.submit()" />
 		</div>
-	</form:form>
-	<form action="/storage/filedownload" method="post">
+	</form>
+	<form action="/storage/file/download" method="post">
 		<sec:csrfInput/>
 		<div class="filebox">
 			<label for="filedownload">FileDownload</label>
@@ -82,6 +84,19 @@
 						 title="FileDownload" 
 						 id="filedownload" 
 						 onchange="this.form.submit()" />
+		</div>
+	</form>
+	<form action="/storage/mkdir" method="post">
+		<sec:csrfInput/>
+		<div class="form-group">
+			<div class="col-xs-3">
+				<div class="input-group">
+					<input name="dirName" class="form-control" placeholder="폴더 이름을 입력하세요." />
+					<span class="input-group-btn">
+						<button type="submit" class="btn btn-primary">폴더 생성</button>	
+					</span>
+				</div>
+			</div>
 		</div>
 	</form>
 	<ul>

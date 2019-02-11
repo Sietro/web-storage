@@ -1,6 +1,6 @@
 package com.inc.controller;
 
-import java.util.Iterator;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.inc.domain.Storage;
 import com.inc.domain.User;
@@ -23,32 +21,12 @@ public class StorageController {
 	@Autowired
 	private StorageService storageService;
 	
-	@Autowired
-	private MultipartHttpServletRequest multiPartHttpServletRequest;
-	
 	@RequestMapping(value="/main", method=RequestMethod.GET)
 	public String storageGet(@AuthenticationPrincipal User user, Model model) {
 		model.addAttribute("storage", new Storage());
 		model.addAttribute("storageList", storageService.getList(user.getId()));
 		return "/storage/storage";
 	}
-	
-	/*@RequestMapping(value="/storage/sub", method=RequestMethod.GET)
-	public String moveSubDir(@AuthenticationPrincipal User user, @RequestParam String fs_uid, Model model) {
-		model.addAttribute("storageList",storageService.moveSubDir(user.getId(), fs_uid));
-		return "/storage/storage";
-	}
-	
-	@RequestMapping(value="/storage/parent", method=RequestMethod.GET)
-	public String moveParentDir(@AuthenticationPrincipal User user, @RequestParam String fs_pid, Model model) {
-		String parent_fs_pid = storageService.moveParentDir(user.getId(), fs_pid).getFs_pid();
-		if(parent_fs_pid == null) {
-			model.addAttribute("storageList",storageService.getList(user.getId()));
-		} else {
-			model.addAttribute("storageList",storageService.moveSubDir(user.getId(), parent_fs_pid));
-		}
-		return "/storage/storage";
-	}*/
 	
 	@RequestMapping(value="/storage/sub", method=RequestMethod.POST)
 	public String moveSubDirPost(@ModelAttribute Storage storage, Model model) {
@@ -68,21 +46,19 @@ public class StorageController {
 		return "/storage/storage";
 	}
 	
-	@RequestMapping(value="/storage/fileupload", method=RequestMethod.POST)
-	public String fileUpload(@RequestParam(defaultValue="root") String location) {
-		System.out.println("전송완료");
-		Iterator<String> iterator = multiPartHttpServletRequest.getFileNames();
-	    MultipartFile multipartFile = null;
-	    while(iterator.hasNext()){
-	        multipartFile = multiPartHttpServletRequest.getFile(iterator.next());
-	        if(multipartFile.isEmpty() == false){
-	        	System.out.println("------------- file start -------------");
-	        	System.out.println("name : "+multipartFile.getName());
-	        	System.out.println("filename : "+multipartFile.getOriginalFilename());
-	        	System.out.println("size : "+multipartFile.getSize());
-	        	System.out.println("-------------- file end --------------\n");
-	        }
-	    }
+	@RequestMapping(value="/storage/file/upload", method=RequestMethod.POST)
+	public String fileUpload(@RequestParam(defaultValue="root") String location, 
+							 HttpServletRequest request,
+							 @AuthenticationPrincipal User user) {
+		storageService.fileUpload(request, user, location);
+		return "/storage/storage";
+	}
+	
+	@RequestMapping(value="/storage/mkdir", method=RequestMethod.POST)
+	public String makeDir(@RequestParam(defaultValue="root") String location,
+						  @RequestParam(defaultValue="새폴더") String dirName,
+						  @AuthenticationPrincipal User user) {
+		storageService.makeDir(location, dirName, user);
 		return "/storage/storage";
 	}
 }
