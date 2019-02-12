@@ -54,26 +54,20 @@
 	<p>${storageList[0].fs_pid }</p>
 	<c:set var="location" value="${storageList[0].fs_pid }" />
 	<c:out value="${location }" default="root"/><br>
-	<%-- <form action="/storage/fileupload" method="post" enctype="multipart/form-data">
-		<sec:csrfInput/>
-		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+	<form action="/storage/file/upload?${_csrf.parameterName }=${_csrf.token }" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="location" value="${location }" />
 		<div class="filebox">
 			<label for="fileupload">FileUpload</label>
 			<input type="file" 
 						 multiple="multiple"
-						 id="fileupload" 
-						 onchange="upload();" />
-		</div>
-	</form> --%>
-	<form action="/storage/file/upload" method="post" enctype="multipart/form-data">
-		<div class="filebox">
-			<label for="fileupload">FileUpload</label>
-			<input type="file" 
-						 multiple="multiple"
-						 id="fileupload" 
+						 title="FileUpload" 
+						 id="fileupload"
 						 name="fileupload"
 						 onchange="this.form.submit()" />
 		</div>
+		<c:if test="${upload != null}">
+					<p>같은 이름이 존재합니다.</p>
+				</c:if>
 	</form>
 	<form action="/storage/file/download" method="post">
 		<sec:csrfInput/>
@@ -86,34 +80,36 @@
 						 onchange="this.form.submit()" />
 		</div>
 	</form>
+	<button type="button" onclick="del()">삭제</button>
 	<form action="/storage/mkdir" method="post">
 		<sec:csrfInput/>
+		<input type="hidden" name="location" value="${location }" />
 		<div class="form-group">
 			<div class="col-xs-3">
 				<div class="input-group">
 					<input name="dirName" class="form-control" placeholder="폴더 이름을 입력하세요." />
 					<span class="input-group-btn">
-						<button type="submit" class="btn btn-primary">폴더 생성</button>	
+						<button type="submit" class="btn btn-primary">폴더 생성</button>
 					</span>
 				</div>
+				<c:if test="${mkdir != null}">
+					<p>같은 이름이 존재합니다.</p>
+				</c:if>
 			</div>
 		</div>
 	</form>
 	<ul>
+		<c:if test="${location != null }">
+		<li>
+			<form:form action="/storage/parent" method="post" modelAttribute="storage">
+				<sec:csrfInput/>
+				<form:hidden path="users_id" value="${storageList[0].users_id }"/>
+				<form:hidden path="fs_pid" value="${location }"/>
+				<button type="submit" class="change_button">..</button>
+			</form:form>
+		</li>
+		</c:if>
 		<c:forEach items="${storageList }" var="storage" varStatus="status">
-			<c:if test="${storage.fs_pid != null }">
-			<li>
-				<form:form action="/storage/parent" method="post" modelAttribute="storage">
-					<sec:csrfInput/>
-					<form:hidden path="users_id" value="${storage.users_id }"/>
-					<form:hidden path="fs_uid" value="${storage.fs_uid }"/>
-					<form:hidden path="fs_pid" value="${storage.fs_pid }"/>
-					<form:hidden path="name" value="${storage.name }"/>
-					<form:hidden path="type" value="${storage.type }"/>
-					<button type="submit" class="change_button">..</button>
-				</form:form>
-			</li>
-			</c:if>
 			<c:if test="${storage.type eq 'd' }">
 			<li>
 				<form:form action="/storage/sub" method="post" modelAttribute="storage">
@@ -123,6 +119,7 @@
 					<form:hidden path="fs_pid" value="${storage.fs_pid }"/>
 					<form:hidden path="name" value="${storage.name }"/>
 					<form:hidden path="type" value="${storage.type }"/>
+					<input type="checkbox" name="checkbox" id="checkbox" onclick="checkboxChecker(this.form)" />
 					<button type="submit" class="change_button">${storage.name }</button>
 				</form:form>
 			</li>
@@ -136,6 +133,7 @@
 					<form:hidden path="fs_pid" value="${storage.fs_pid }"/>
 					<form:hidden path="name" value="${storage.name }"/>
 					<form:hidden path="type" value="${storage.type }"/>
+					<input type="checkbox" name="checkbox" id="checkbox" onclick="checkboxChecker(this.form)" />
 					<button type="submit" class="change_button">${storage.name }</button>
 				</form:form>
 			</li>
@@ -145,26 +143,31 @@
 	<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
  	<script>
-		function fileUp(location){
-			$.ajax({
-				url:"/storage/fileupload",
-				enctype: 'multipart/form-data',
-				type:"post",
-				processData: false,
-	      contentType: false,
-	      cache: false,
-				data:{location:location},
-				beforeSend: function(xhr){
-					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}")
-				},
-				success:function(data){
-					if(data == 'success'){
-						alert('전송완료');
-					}else {
-						alert('실패');
-					}
-				}
-			});
+		function del(){
+			var forms = $('form[name=checked]');
+			for(var form of forms){
+				console.log(form.users_id.value);
+				/* $.ajax({
+					action:"/"
+					data:{user_id:form.users_id.value}
+				});	 */
+			}
+			//location.href="/";
+			//$('form[name=checked]').submit();
+		}
+		
+		function checkboxChecker(thisform){
+			if ($('input[name=checkbox]').is(":checked")) {
+					$(thisform).attr('action', '/storage/delete');
+					$(thisform).attr('name','checked');
+			} else {
+			    if($(thisform).find('input#type').val() == 'f'){	
+			    	$(thisform).attr('action', '/storage/file');
+			    }else{
+			    	$(thisform).attr('action', '/storage/sub');
+			    }
+			    $(thisform).removeAttr('name');
+			}
 		}
  	</script>
 </body>

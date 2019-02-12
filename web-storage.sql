@@ -111,6 +111,7 @@ create table file_system(
 );
 
 select * from file_system;
+select * from file_system where fs_pid is null and name = 'qwe1';
 insert into file_system values('admin', 'admin001', null, 'test1', 'd', sysdate);
 insert into file_system values('admin', 'admin002', null, 'test2', 'd', sysdate);
 insert into file_system values('admin', null, null, 'test3', 'f', sysdate);
@@ -121,7 +122,9 @@ insert into file_system values('admin', null, 'admin002', 'test2_2', 'f', sysdat
 
 
 select * from file_system where users_id = 'admin' and fs_pid is null;
+select * from file_system where users_id = 'admin' and fs_pid = '2fe7b3cef76f46d38601d9ef499c02c7';
 select * from user_constraints where table_name = 'FILE_SYSTEM';
+delete from file_system where name = 'qwe1';
 update file_system set type = 'f' where type = 'file';
 
 alter table file_system drop constraint fs_type_chk;

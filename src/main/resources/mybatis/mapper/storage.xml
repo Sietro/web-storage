@@ -3,8 +3,13 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="storage">
-	<select id="getList" parameterType="String" resultType="Storage">
-		select * from file_system where users_id = #{value} and fs_pid is null order by regdate asc
+	<select id="getList" parameterType="Storage" resultType="Storage">
+		<if test="fs_pid != 'root'">
+			select * from file_system where fs_pid = #{fs_pid} and users_id = #{users_id} order by regdate asc
+		</if>
+		<if test="fs_pid == 'root'">
+			select * from file_system where fs_pid is null and users_id = #{users_id} order by regdate asc
+		</if>
 	</select>
 	
 	<select id="moveSubDir" parameterType="Storage" resultType="Storage">
@@ -27,6 +32,24 @@
 	<select id="uidDualCheck" parameterType="String" resultType="Storage">
 		select * from file_system where fs_uid = #{value}
 	</select>
+	
+	<select id="fsDupCheck" parameterType="Storage" resultType="Storage">
+		<if test="fs_pid != 'root'">
+			select * from file_system where fs_pid = #{fs_pid} and name = #{name}
+		</if>
+		<if test="fs_pid == 'root'">
+			select * from file_system where fs_pid is null and name = #{name}
+		</if>
+	</select>
+	
+	<insert id="saveFile" parameterType="Storage">
+		<if test="fs_pid != 'root'">
+			insert into file_system values(#{users_id}, #{fs_uid}, #{fs_pid}, #{name}, 'f', sysdate)
+		</if>
+		<if test="fs_pid == 'root'">
+			insert into file_system values(#{users_id}, #{fs_uid}, null, #{name}, 'f', sysdate)
+		</if>
+	</insert>
 </mapper>
 
 

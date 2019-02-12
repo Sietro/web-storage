@@ -14,8 +14,8 @@ public class StorageDao {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	public List<Storage> getList(String users_id) {
-		return sqlSession.selectList("storage.getList", users_id);
+	public List<Storage> getList(Storage storage) {
+		return sqlSession.selectList("storage.getList", storage);
 	}
 
 	public List<Storage> moveSubDir(Storage storage) {
@@ -30,8 +30,16 @@ public class StorageDao {
 		sqlSession.insert("storage.makeDir", storage);
 	}
 	
-	public Storage uidDualCheck(String randomString) {
+	public Storage uidDupCheck(String randomString) {
 		return sqlSession.selectOne("storage.uidDualCheck", randomString);
+	}
+
+	public Storage fsDupCheck(Storage storage) {
+		return sqlSession.selectOne("storage.fsDupCheck", storage);
+	}
+
+	public void saveFile(Storage storage) {
+		sqlSession.insert("storage.saveFile", storage);
 	}
 	
 }

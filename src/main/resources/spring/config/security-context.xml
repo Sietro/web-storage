@@ -8,7 +8,6 @@
 	<secur:http pattern="/public/css/**" security="none" />
 	<secur:http pattern="/upload/image/**" security="none" />
 	<secur:http pattern="/upload/board/**" security="none" />
-	<secur:http pattern="/storage/file/**" security="none" />
 	<secur:http pattern="/favicon.ico" security="none" />
 		
 	<secur:http auto-config="true" use-expressions="true">
