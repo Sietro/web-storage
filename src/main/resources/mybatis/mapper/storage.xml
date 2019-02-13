@@ -50,6 +50,14 @@
 			insert into file_system values(#{users_id}, #{fs_uid}, null, #{name}, 'f', sysdate)
 		</if>
 	</insert>
+	
+	<delete id="delete" parameterType="String">
+		delete from file_system where fs_uid = #{value}
+	</delete>
+	
+	<select id="getParent_name" parameterType="String" resultType="Storage">
+		select * from file_system where fs_uid = #{value}
+	</select>
 </mapper>
 
 

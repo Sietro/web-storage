@@ -104,7 +104,7 @@ select * from user_constraints where table_name = 'QNA_REPLY';
 create table file_system(
     users_id varchar2(20) constraint fs_user_id_fk references users(id),
     fs_uid varchar2(260 BYTE) constraint fs_uid_uk unique,
-    fs_pid varchar2(260 BYTE) constraint fs_pid_ref references file_system(fs_uid),
+    fs_pid varchar2(260 BYTE) constraint fs_pid_ref references file_system(fs_uid) on delete cascade,
     name varchar2(30) not null,
     type char(1) constraint fs_type_chk check(type in('f','d')),
     regdate date not null
@@ -114,8 +114,8 @@ select * from file_system;
 select * from file_system where fs_pid is null and name = 'qwe1';
 insert into file_system values('admin', 'admin001', null, 'test1', 'd', sysdate);
 insert into file_system values('admin', 'admin002', null, 'test2', 'd', sysdate);
-insert into file_system values('admin', null, null, 'test3', 'f', sysdate);
-insert into file_system values('admin', null, null, 'test4', 'f', sysdate);
+insert into file_system values('admin', 'test3', null, 'test3', 'f', sysdate);
+insert into file_system values('admin', 'test4', null, 'test4', 'f', sysdate);
 
 insert into file_system values('admin', null, 'admin001', 'test1_1', 'f', sysdate);
 insert into file_system values('admin', null, 'admin002', 'test2_2', 'f', sysdate);
@@ -124,15 +124,20 @@ insert into file_system values('admin', null, 'admin002', 'test2_2', 'f', sysdat
 select * from file_system where users_id = 'admin' and fs_pid is null;
 select * from file_system where users_id = 'admin' and fs_pid = '2fe7b3cef76f46d38601d9ef499c02c7';
 select * from user_constraints where table_name = 'FILE_SYSTEM';
-delete from file_system where name = 'qwe1';
+delete from file_system where name = 'test4';
 update file_system set type = 'f' where type = 'file';
+
+alter table file_system drop constraint fs_pid_ref;
+alter table file_system add constraint fs_pid_ref foreign key(fs_pid) references file_system(fs_uid) on delete cascade;
 
 alter table file_system drop constraint fs_type_chk;
 alter table file_system modify type char(1);
-alter table file_system  add constraint fs_type_chk check(type in('f','d'));
+alter table file_system add constraint fs_type_chk check(type in('f','d'));
 alter table file_system modify fs_uid varchar2(260 BYTE);
 alter table file_system modify fs_pid varchar2(260 BYTE);
 select * from file_system where users_id = 'admin' and fs_uid = 'admin001';
+select * from file_system where fs_uid = '53f97c2ade6f4fcc9357d8bdec6f0b97';
+delete from file_system;
 commit;
 
 --------------------------------------------------------------------2019/01/30

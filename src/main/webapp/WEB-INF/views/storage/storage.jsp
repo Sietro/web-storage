@@ -51,9 +51,9 @@
 	<h1>Storage</h1>
 	<sec:authentication property="principal.username" var="username"/>
 	<p>${username }님 안녕하세요</p>
-	<p>${storageList[0].fs_pid }</p>
-	<c:set var="location" value="${storageList[0].fs_pid }" />
-	<c:out value="${location }" default="root"/><br>
+	
+	<hr />
+	<p>세션 ${sessionScope.location }</p>
 	<form action="/storage/file/upload?${_csrf.parameterName }=${_csrf.token }" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="location" value="${location }" />
 		<div class="filebox">
@@ -99,12 +99,12 @@
 		</div>
 	</form>
 	<ul>
-		<c:if test="${location != null }">
+		<c:if test="${sessionScope.location != null }">
 		<li>
 			<form:form action="/storage/parent" method="post" modelAttribute="storage">
 				<sec:csrfInput/>
-				<form:hidden path="users_id" value="${storageList[0].users_id }"/>
-				<form:hidden path="fs_pid" value="${location }"/>
+				<form:hidden path="users_id" value="${username }"/>
+				<form:hidden path="fs_pid" value="${sessionScope.location }"/>
 				<button type="submit" class="change_button">..</button>
 			</form:form>
 		</li>
@@ -145,27 +145,35 @@
  	<script>
 		function del(){
 			var forms = $('form[name=checked]');
-			for(var form of forms){
-				console.log(form.users_id.value);
-				/* $.ajax({
-					action:"/"
-					data:{user_id:form.users_id.value}
-				});	 */
+			for(var i = 0; i < forms.length; i++){
+				 $.ajax({
+					url:"/storage/delete",
+					type:"post",
+					data:{fs_uid:forms[i].fs_uid.value, 
+								users_id:forms[i].users_id.value, 
+								location:forms[i].fs_pid.value,
+								name:forms[i].name.value},
+					beforeSend: function(xhr){
+						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}")
+					},
+					success:function(data){
+						console.log(i);
+						if(data.isSuccess == 'true'){
+							alert(data.name+" complete delete");
+						}
+						if(i === forms.length){
+							location.href="/main";
+						}
+					}
+				});
 			}
-			//location.href="/";
-			//$('form[name=checked]').submit();
+			
 		}
 		
 		function checkboxChecker(thisform){
 			if ($('input[name=checkbox]').is(":checked")) {
-					$(thisform).attr('action', '/storage/delete');
 					$(thisform).attr('name','checked');
 			} else {
-			    if($(thisform).find('input#type').val() == 'f'){	
-			    	$(thisform).attr('action', '/storage/file');
-			    }else{
-			    	$(thisform).attr('action', '/storage/sub');
-			    }
 			    $(thisform).removeAttr('name');
 			}
 		}

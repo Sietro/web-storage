@@ -41,5 +41,13 @@ public class StorageDao {
 	public void saveFile(Storage storage) {
 		sqlSession.insert("storage.saveFile", storage);
 	}
+
+	public void delete(String fs_uid) {
+		sqlSession.delete("storage.delete", fs_uid);
+	}
+
+	public Storage getParent_name(String location) {
+		return sqlSession.selectOne("storage.getParent_name", location);
+	}
 	
 }

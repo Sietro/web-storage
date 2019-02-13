@@ -51,7 +51,6 @@ public class StorageService {
 	}
 
 	public String fileUpload(HttpServletRequest request, User user, String location) {
-		System.out.println("업로드 위치 : " + location);
 		multiPartHttpServletRequest = (MultipartHttpServletRequest)request;
 		Iterator<String> iterator = multiPartHttpServletRequest.getFileNames();
 	    MultipartFile multipartFile = null;
@@ -87,7 +86,7 @@ public class StorageService {
                 System.out.println("-------------- file end --------------\n");*/
                 file = new File(filePath + realLocation + multipartFile.getOriginalFilename());
                 storageDao.saveFile(storage);
-                System.out.println("경로"+ filePath + realLocation + multipartFile.getOriginalFilename());
+                //System.out.println("경로"+ filePath + realLocation + multipartFile.getOriginalFilename());
                 try {
 					multipartFile.transferTo(file);
 				} catch (IllegalStateException | IOException e) {
@@ -116,12 +115,73 @@ public class StorageService {
 		storage.setFs_pid(location);
 		storage.setName(dirName);
 		if(storageDao.fsDupCheck(storage) != null) {
-			return "isDuplicated";
+			if("새폴더".equals(dirName)) {
+				int i = 1;
+				while(storageDao.fsDupCheck(storage) != null) {
+					dirName = "새폴더("+i+")";
+					storage.setName(dirName);
+					i++;
+				}
+			}else {
+				return "isDuplicated";
+			}
 		}
 		storageDao.makeDir(storage);
-		File file = new File(filePath+user.getId()+"\\"+location);
-		file.mkdirs();
+		String path = "\\root\\";
+		if(!"root".equals(location)) {
+			String realpath = "";
+			while(location != null) {
+				realpath = storageDao.getParent_name(location).getName() + "\\" + realpath;
+				location = storageDao.getParent_name(location).getFs_pid();
+			}
+			path = path + realpath;
+		}
+		File file = new File(filePath+user.getId()+path+dirName);
+		if(file.exists() == false){
+			file.mkdirs();
+        }
 		return null;
 	}
 
+	public void delete(String fs_uid, String location, String users_id, String name) {
+		String path = "\\root\\";
+		if(!"root".equals(location)) {
+			String realpath = "";
+			while(location != null) {
+				realpath = storageDao.getParent_name(location).getName() + "\\" + realpath;
+				location = storageDao.getParent_name(location).getFs_pid();
+			}
+			path = path + realpath;
+		}
+		File file = new File(filePath+users_id+path+name);
+		if(file.exists()){
+			Boolean deleted = false;
+			if(file.isDirectory()) {
+				deleted = deleteFolder(file);
+			}else {				
+				deleted = file.delete();
+			}
+			System.out.println("파일삭제 : " + deleted);
+			if(deleted) {
+				storageDao.delete(fs_uid);
+			}
+        }
+	}
+	
+	private boolean deleteFolder(File file) {
+		File[] file_list = file.listFiles(); //파일리스트 얻어오기
+		
+		for (int i = 0; i < file_list.length; i++) {
+		    if(file_list[i].isFile()) {
+		    	file_list[i].delete();
+		    	System.out.println("파일이 삭제되었습니다.");
+		    }else {
+		    	File subFile = new File(file_list[i].getPath());
+		    	deleteFolder(subFile); //재귀함수호출
+		    	System.out.println("폴더가 삭제되었습니다.");
+		    }
+		    file_list[i].delete();
+		 }
+		 return file.delete(); //폴더 삭제
+	 }
 }
