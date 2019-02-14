@@ -32,6 +32,7 @@ public class UserController {
 	public String signinGet(@RequestParam(value = "fail", required = false) String fail,
 							@RequestParam(value = "signout", required = false) String signout, 
 							Model model) {
+		session.setAttribute("location", null);
 		model.addAttribute("user", new User());
 		if (fail != null) {
 			model.addAttribute("fail", "아이디 또는 비밀번호가 올바르지 않습니다.");

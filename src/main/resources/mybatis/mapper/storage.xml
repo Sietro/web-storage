@@ -5,10 +5,12 @@
 <mapper namespace="storage">
 	<select id="getList" parameterType="Storage" resultType="Storage">
 		<if test="fs_pid != 'root'">
-			select * from file_system where fs_pid = #{fs_pid} and users_id = #{users_id} order by regdate asc
+			select * from file_system where fs_pid = #{fs_pid} and users_id = #{users_id} 
+			order by DECODE (type, 'd', 1, 'f', 2), name asc, regdate asc
 		</if>
 		<if test="fs_pid == 'root'">
-			select * from file_system where fs_pid is null and users_id = #{users_id} order by regdate asc
+			select * from file_system where fs_pid is null and users_id = #{users_id} 
+			order by DECODE (type, 'd', 1, 'f', 2), name asc, regdate asc
 		</if>
 	</select>
 	
@@ -58,6 +60,20 @@
 	<select id="getParent_name" parameterType="String" resultType="Storage">
 		select * from file_system where fs_uid = #{value}
 	</select>
+	
+	<update id="fileNameUpdate" parameterType="Storage">
+		<if test="fs_pid != 'root'">
+			update file_system set name = #{name} where users_id = #{users_id} and
+																								fs_uid = #{fs_uid} and
+																								fs_pid = #{fs_pid}
+		</if>
+		<if test="fs_pid == 'root'">
+			update file_system set name = #{name} where users_id = #{users_id} and
+																								fs_uid = #{fs_uid} and
+																								fs_pid is null
+		</if>
+		
+	</update>
 </mapper>
 
 

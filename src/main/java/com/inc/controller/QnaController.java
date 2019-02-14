@@ -35,6 +35,7 @@ public class QnaController {
 	public String noticeGet(@RequestParam(defaultValue="1") int page,
 							@AuthenticationPrincipal User user,
 							Model model ) {
+		session.setAttribute("location", null);
 		model.addAttribute("pageHTML", boardService.getPaging(page));
 		if("admin".equals(user.getId())) {
 			model.addAttribute("boardList", boardService.getBoardList(page, "admin"));

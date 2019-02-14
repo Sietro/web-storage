@@ -49,5 +49,13 @@ public class StorageDao {
 	public Storage getParent_name(String location) {
 		return sqlSession.selectOne("storage.getParent_name", location);
 	}
+
+	public void fileNameUpdate(Storage storage) {
+		System.out.println("name: "+storage.getName());
+		System.out.println("pid: "+storage.getFs_pid());
+		System.out.println("uid: "+storage.getFs_uid());
+		System.out.println("id: "+storage.getUsers_id());
+		sqlSession.update("storage.fileNameUpdate", storage);
+	}
 	
 }

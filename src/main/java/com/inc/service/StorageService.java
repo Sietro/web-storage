@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,16 +50,36 @@ public class StorageService {
 	public Storage getParentDir(Storage storage) {
 		return storageDao.getParentDir(storage);
 	}
-
+	
+	private String getRandomString(){
+		String randomString;
+		while(true) {
+			randomString = UUID.randomUUID().toString().replaceAll("-", "");
+			if(storageDao.uidDupCheck(randomString) == null) {
+				break;
+			}
+		}
+        return randomString;
+    }
+	
+	private File getRealPath(String location, String id, String name) {
+		String path = "\\root\\";
+		if(!"root".equals(location)) {
+			String realpath = "";
+			while(location != null) {
+				realpath = storageDao.getParent_name(location).getName() + "\\" + realpath;
+				location = storageDao.getParent_name(location).getFs_pid();
+			}
+			path = path + realpath;
+		}
+		return new File(filePath+id+path+name);
+	}
+	
 	public String fileUpload(HttpServletRequest request, User user, String location) {
 		multiPartHttpServletRequest = (MultipartHttpServletRequest)request;
 		Iterator<String> iterator = multiPartHttpServletRequest.getFileNames();
 	    MultipartFile multipartFile = null;
-	    /*String originalFileName = null;
-        String originalFileExtension = null;
-        String storedFileName = null;*/
-        String realLocation = user.getId()+"\\"+location+"\\";
-        File file = new File(filePath+realLocation);
+        File file = getRealPath(location, user.getId(), "");
         if(file.exists() == false){
             file.mkdirs();
         }
@@ -73,20 +94,8 @@ public class StorageService {
 				return "isDuplicated";
 			}
 	        if(multipartFile.isEmpty() == false){
-	        	/*originalFileName = multipartFile.getOriginalFilename();
-                originalFileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                storedFileName = getRandomString() + originalFileExtension;
-                System.out.println("------------- file start -------------");
-                System.out.println("name : "+multipartFile.getName());
-                System.out.println("filename : "+multipartFile.getOriginalFilename());
-                System.out.println("size : "+multipartFile.getSize());
-                System.out.println("originalFileName : "+originalFileName);
-                System.out.println("originalFileExtension : "+originalFileExtension);
-                System.out.println("storedFileName : "+storedFileName);
-                System.out.println("-------------- file end --------------\n");*/
-                file = new File(filePath + realLocation + multipartFile.getOriginalFilename());
+                file = new File(file.getPath()+ "\\" + multipartFile.getOriginalFilename());
                 storageDao.saveFile(storage);
-                //System.out.println("경로"+ filePath + realLocation + multipartFile.getOriginalFilename());
                 try {
 					multipartFile.transferTo(file);
 				} catch (IllegalStateException | IOException e) {
@@ -96,17 +105,6 @@ public class StorageService {
 	    }
 	    return null;
 	}
-	
-	private String getRandomString(){
-		String randomString;
-		while(true) {
-			randomString = UUID.randomUUID().toString().replaceAll("-", "");
-			if(storageDao.uidDupCheck(randomString) == null) {
-				break;
-			}
-		}
-        return randomString;
-    }
 
 	public String makeDir(String location, String dirName, User user) {
 		Storage storage = new Storage();
@@ -127,16 +125,7 @@ public class StorageService {
 			}
 		}
 		storageDao.makeDir(storage);
-		String path = "\\root\\";
-		if(!"root".equals(location)) {
-			String realpath = "";
-			while(location != null) {
-				realpath = storageDao.getParent_name(location).getName() + "\\" + realpath;
-				location = storageDao.getParent_name(location).getFs_pid();
-			}
-			path = path + realpath;
-		}
-		File file = new File(filePath+user.getId()+path+dirName);
+		File file = getRealPath(location, user.getId(), dirName);
 		if(file.exists() == false){
 			file.mkdirs();
         }
@@ -144,16 +133,7 @@ public class StorageService {
 	}
 
 	public void delete(String fs_uid, String location, String users_id, String name) {
-		String path = "\\root\\";
-		if(!"root".equals(location)) {
-			String realpath = "";
-			while(location != null) {
-				realpath = storageDao.getParent_name(location).getName() + "\\" + realpath;
-				location = storageDao.getParent_name(location).getFs_pid();
-			}
-			path = path + realpath;
-		}
-		File file = new File(filePath+users_id+path+name);
+		File file = getRealPath(location, users_id, name);
 		if(file.exists()){
 			Boolean deleted = false;
 			if(file.isDirectory()) {
@@ -184,4 +164,32 @@ public class StorageService {
 		 }
 		 return file.delete(); //폴더 삭제
 	 }
+
+	public File fileDownload(Storage storage) {
+		if("".equals(storage.getFs_pid())) {
+			storage.setFs_pid("root");
+		}
+		System.out.println("pid : "+storage.getFs_pid());
+		return getRealPath(storage.getFs_pid(), storage.getUsers_id(), storage.getName());
+	}
+
+	public String fileNameUpdate(String fs_uid, 
+								 String users_id, 
+								 String name, 
+								 String location, 
+								 String newName) {
+		File sourceFile = getRealPath(location, users_id, name);
+		File destinationFile = getRealPath(location, users_id, newName);
+		boolean rename = sourceFile.renameTo(destinationFile);
+		if(!rename) {
+			return "fail";
+		}
+		Storage storage = new Storage();
+		storage.setFs_uid(fs_uid);
+		storage.setFs_pid(location);
+		storage.setUsers_id(users_id);
+		storage.setName(newName);
+		storageDao.fileNameUpdate(storage);
+		return "success";
+	}
 }
