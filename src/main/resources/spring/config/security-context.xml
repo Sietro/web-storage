@@ -26,7 +26,13 @@
 					logout-success-url="/?signout"
 					invalidate-session="true"/>		
 	</secur:http>
+	
+	<bean id="bcryptPasswordEncoder"
+        class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+   
 	<secur:authentication-manager>
-		<secur:authentication-provider user-service-ref="userService" />
+		<secur:authentication-provider user-service-ref="userService">
+			<secur:password-encoder ref="bcryptPasswordEncoder"/>
+		</secur:authentication-provider>
 	</secur:authentication-manager>
 </beans>

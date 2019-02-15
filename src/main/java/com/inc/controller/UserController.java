@@ -1,16 +1,20 @@
 package com.inc.controller;
 
+import java.util.List;
+
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +36,6 @@ public class UserController {
 	public String signinGet(@RequestParam(value = "fail", required = false) String fail,
 							@RequestParam(value = "signout", required = false) String signout, 
 							Model model) {
-		session.setAttribute("location", null);
 		model.addAttribute("user", new User());
 		if (fail != null) {
 			model.addAttribute("fail", "아이디 또는 비밀번호가 올바르지 않습니다.");
@@ -42,23 +45,6 @@ public class UserController {
 		}
 		return "/user/signin";
 	}
-	
-	/*@RequestMapping(value="/user/signin", method=RequestMethod.POST)
-	public String signinPost(@ModelAttribute User user, BindingResult bindingResult) {
-		User existUser = userService.selectOne(user.getId());
-		if(existUser == null) {
-			bindingResult.addError(new FieldError("idError", "id", user.getId(),
-					false, null, null, "아이디가 존재하지 않습니다."));
-		}else if(!existUser.getPassword().equals(user.getPassword())) {
-			bindingResult.addError(new FieldError("passwordError", "password", user.getPassword(),
-					false, null, null, "암호가 일치하지 않습니다."));
-		}
-		if(bindingResult.hasErrors()) {
-			return "/user/signin";
-		}
-		session.setAttribute("user", existUser);
-		return "redirect:/main";
-	}*/
 	
 	@RequestMapping(value="/user/signup", method=RequestMethod.GET)
 	public String signupGet(Model model) {
@@ -153,10 +139,47 @@ public class UserController {
 			return "fail";
 		}
 		try {
-			userService.sendPasswordEmail(id, email, existUser.getPassword());
+			userService.sendPasswordEmail(id, email);
 		} catch (MessagingException e) {
 			return "error";
 		}
 		return "success";
+	}
+	
+	@RequestMapping(value="/mypage", method=RequestMethod.GET)
+	public String myPage(@AuthenticationPrincipal User user, Model model, HttpServletRequest request) {
+		model.addAttribute("user", user);
+		String phone = user.getPhone();
+		String phone2 = phone.substring(phone.length()-4, phone.length());
+		String phone3 = phone.substring(3, phone.length()-4);
+		model.addAttribute("phone2", phone2);
+		model.addAttribute("phone3", phone3);
+		return "/user/mypage";
+	}
+	
+	@RequestMapping(value="/mypage/update", method=RequestMethod.POST)
+	public String updateUser(@AuthenticationPrincipal User user,
+							 @ModelAttribute @Valid User newUser,
+							 BindingResult bindingResult,
+							 Model model) {
+		if(!userService.passwordChk(user, newUser)) {
+			bindingResult.addError(new FieldError("passwordNE", "password", null,
+					false, null, null, "패스워드가 틀렸습니다."));
+			return "/user/mypage";
+		}
+		Boolean newPasswordError =bindingResult.hasFieldErrors("newPassword");
+		Boolean phoneError =bindingResult.hasFieldErrors("phone");
+		Boolean emailError =bindingResult.hasFieldErrors("email");
+		if(newPasswordError || phoneError || emailError) {
+			String phone = newUser.getPhone();
+			String phone2 = phone.substring(phone.length()-4, phone.length());
+			String phone3 = phone.substring(3, phone.length()-4);
+			model.addAttribute("phone2", phone2);
+			model.addAttribute("phone3", phone3);
+			return "/user/mypage";
+		}
+		userService.updateUser(user, newUser);
+		System.out.println("암호 : "+user.getPassword());
+		return "/user/mypage";
 	}
 }

@@ -11,11 +11,11 @@
 		</div>
 		<div class="collapse navbar-collapse" id="navbar">
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="/main"><span class="glyphicon glyphicon-cloud"></span> Storage</a></li>
+				<li><a href="/main?fromMenu"><span class="glyphicon glyphicon-cloud"></span> Storage</a></li>
 				<li><a href="/board/notice/list"><span class="glyphicon glyphicon-list"></span> Notice</a></li>
 				<li><a href="/board/qna/list"><span class="glyphicon glyphicon-list"></span> QnA</a></li>
 				<sec:authorize access="hasRole('ROLE_USER')">
-				<li><a href="/user/mypage"><span class="glyphicon glyphicon-user"></span> Mypage</a></li>
+				<li><a href="/mypage"><span class="glyphicon glyphicon-user"></span> Mypage</a></li>
 				</sec:authorize>
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
 				<li><a href="/manage"><span class="glyphicon glyphicon-wrench"></span> Manage</a></li>

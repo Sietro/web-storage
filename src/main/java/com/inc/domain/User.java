@@ -16,7 +16,14 @@ public class User implements UserDetails {
 	@Pattern(regexp="(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$])[A-Za-z0-9!@#$]{5,20}",
 			message="알파벳, 숫자, 특수문자(!@#$)을 1글자 이상 포함하는, 5~20 글자 이내")
 	private String password;
+	
+	@Pattern(regexp="(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$])[A-Za-z0-9!@#$]{5,20}",
+			message="알파벳, 숫자, 특수문자(!@#$)을 1글자 이상 포함하는, 5~20 글자 이내")
 	private String passwordchk;
+	
+	@Pattern(regexp="(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$])[A-Za-z0-9!@#$]{5,20}",
+			message="알파벳, 숫자, 특수문자(!@#$)을 1글자 이상 포함하는, 5~20 글자 이내")
+	private String newPassword;
 	
 	@Pattern(regexp="[가-힣]{2,10}", message="한글, 2~10글자")
 	private String name;
@@ -39,6 +46,15 @@ public class User implements UserDetails {
 	
 	private List<Authority> authorities;
 	
+	public String getNewPassword() {
+		return newPassword;
+	}
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+	public void setAuthorities(List<Authority> authorities) {
+		this.authorities = authorities;
+	}
 	public String getId() {
 		return id;
 	}

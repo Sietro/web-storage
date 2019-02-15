@@ -33,7 +33,6 @@ public class NoticeController {
 	
 	@RequestMapping(value="/board/notice/list", method=RequestMethod.GET)
 	public String noticeGet(@RequestParam(defaultValue="1") int page, Model model) {
-		session.setAttribute("location", null);
 		model.addAttribute("pageHTML", boardService.getPaging(page));
 		model.addAttribute("boardList", boardService.getBoardList(page));
 		session.setAttribute("page", page);

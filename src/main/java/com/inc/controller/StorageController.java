@@ -37,8 +37,15 @@ public class StorageController {
 	private HttpSession session;
 	
 	@RequestMapping(value="/main", method=RequestMethod.GET)
-	public String storageGet(@AuthenticationPrincipal User user, Model model) {
-		String location = (String)session.getAttribute("location");
+	public String storageGet(@AuthenticationPrincipal User user,
+							 @RequestParam(required=false) String fromMenu,
+							 Model model) {
+		String location = null;
+		if(fromMenu == null) {
+			location = (String)session.getAttribute("location");
+		}else {
+			session.setAttribute("location", null);
+		}
 		Storage storage = new Storage();
 		storage.setUsers_id(user.getId());
 		if("".equals(location) || location == null) {

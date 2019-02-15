@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.inc.dao.UserDao;
@@ -22,6 +23,9 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private JavaMailSenderImpl mailSender;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 	
 	public User selectOne(String id) {
 		return userDao.selectOne(id); 
@@ -56,6 +60,8 @@ public class UserService implements UserDetailsService {
 	}
 
 	public void signup(User user) {
+		String encodedPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(encodedPassword);
 		userDao.signup(user);
 	}
 
@@ -88,10 +94,11 @@ public class UserService implements UserDetailsService {
 		return userDao.finduserPassword(user);
 	}
 	
-	public void sendPasswordEmail(String id, String email, String password ) throws MessagingException {
+	public void sendPasswordEmail(String id, String email) throws MessagingException {
 		String from = "tncrjaeoddl@gmail.com";
 		String subject = "[WebStorage] Certify Email";
-		String content = "WebStorage 입니다. ["+id+"] 님의 암호는는 ["+password+"] 입니다.";
+		String content = "WebStorage 입니다. ["+id+"] 님의 암호는는 ["+getRandomCode()+"] 입니다."
+				+ "로그인 이후 암호를 변경하여 주세요.";
 		MimeMessage msg = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(msg, true, "UTF-8");
 		helper.setFrom(from);
@@ -110,4 +117,28 @@ public class UserService implements UserDetailsService {
 		return user;
 	}
 	
+	
+
+	public void updateUser(User user, User newUser) {
+		Boolean checkPassword = user.getPassword().equals(newUser.getNewPassword());
+		Boolean checkPhone = user.getPhone().equals(newUser.getPhone());
+		Boolean checkEmail = user.getEmail().equals(newUser.getEmail());
+		if(!checkPassword || !checkPhone || !checkEmail) {
+			if(!checkPassword) {
+				String encodedPassword = passwordEncoder.encode(newUser.getNewPassword());
+				user.setPassword(encodedPassword);
+				System.out.println("변환완료");
+			} else if(!checkPhone){
+				user.setPhone(newUser.getPhone());
+			} else if(!checkEmail){
+				user.setEmail(newUser.getEmail());
+			}
+		}
+		userDao.updateUser(user);
+		loadUserByUsername(user.getId());
+	}
+
+	public boolean passwordChk(User user, User newUser) {
+		return passwordEncoder.matches(newUser.getPassword(), user.getPassword());
+	}
 }

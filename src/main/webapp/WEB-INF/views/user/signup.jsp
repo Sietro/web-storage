@@ -79,11 +79,11 @@
 							</div>
 							<div class="col-xs-2">
 								<input class="form-control" name="phone2" id="phone2" maxlength="4" onkeyup="makePhone();"
-								value="<%=request.getParameter("phone2") %>"/>
+								value="${requestScope.phone2 }"/>
 							</div>
 							<div class="col-xs-2">
 								<input class="form-control" name="phone3" id="phone3" maxlength="4" onkeyup="makePhone();"
-								value="<%=request.getParameter("phone3") %>"/>
+								value="${requestScope.phone3 }"/>
 							</div>
 						</div>
 						<div class="col-xs-6 col-xs-offset-4">
@@ -105,7 +105,7 @@
 				  	</div>
 				  	<div class="col-xs-2">
 				  		<input name="certifyCode" class="form-control" placeholder="인증코드 입력"
-				  			value="<%=request.getParameter("certifyCode") %>" />
+				  			value="${requestScope.certifyCode }" />
 				  	</div>
 				  	<div class="col-xs-4 col-xs-offset-4">
 				  		<form:errors path="email" class="text-danger" />
@@ -125,10 +125,10 @@
 							<form:errors path="postcode" class="text-danger" />
 							<br />
 							<input class="form-control" name="address1" id="address1" readonly="readonly" 
-							value="<%=request.getParameter("address1") %>" />
+							value="${requestScope.address1 }" />
 							<br />
 							<input class="form-control" name="address2" id="address2" placeholder="상세주소" 
-							onkeyup="makeAddress();" value="<%=request.getParameter("address2") %>"/>
+							onkeyup="makeAddress();" value="${requestScope.address2 }"/>
 							<form:hidden path="address" id="address" value="${requestScope.address }" />
 							<form:errors path="address" class="text-danger"  />
 						</div>

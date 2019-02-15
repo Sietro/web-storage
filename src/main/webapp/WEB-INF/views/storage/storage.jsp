@@ -72,6 +72,8 @@
 			</script>
 		</c:if>
 	</form>
+	<input type="checkbox" name="checkbox_all" id="checkbox_all" onchange="checkAllBox()" />
+	<label for="checkbox_all" >전체선택</label>
 	<button type="button" onclick="del()" class="btn btn-danger">삭제</button>
 	<form action="/storage/mkdir" method="post">
 		<sec:csrfInput/>
@@ -229,6 +231,10 @@
 					}
 				}
 			});
+		}
+		
+		function checkAllBox(){
+			$('input[name=checkbox]').click();
 		}
  	</script>
 </body>

@@ -5,7 +5,7 @@ grant dba to webstorage;
 
 create table users(
     id varchar2(20) primary key,
-    password varchar2(20) not null,
+    password varchar2(60) not null,
     name varchar2(20) not null,
     gender char(1) check(gender in('m','f')),
     phone varchar2(11) not null,
@@ -16,6 +16,8 @@ create table users(
 select * from users;
 insert into users values('admin', 'tnc87409123@', '관리자', 'm', '01075524110', 'tncrja@naver.com', '05707', '서울 송파구 송이로 88(가락대림아파트) 1동');
 select * from user_constraints where table_name = 'USERS';
+alter table users modify password varchar2(60);
+update users set password = '$2a$10$mulmpBP8.iCG5PT8dQpP3uICKqs5kgGiwjNLIDrQfKYSkWq0dwqde' where id = 'test1';
 
 
 create table authority(
@@ -40,7 +42,7 @@ create sequence seq_authorization_id;
 
 insert into authorization values(seq_authorization_id.nextval, 'admin', 'ROLE_ADMIN');
 insert into authorization values(seq_authorization_id.nextval, 'test1', 'ROLE_USER');
---------------------------------------------------------------------------------- 1월 23 이전
+--------------------------------------------------------------------------------- 
 create table notice(
     id number primary key,
     users_id varchar2(20) references users(id),
@@ -143,4 +145,4 @@ select * from file_system;
 select * from file_system where users_id = 'admin' and fs_pid = 'aecdbc4c328c4be4bb76b7320edce3fa';
 update file_system set name = 'before.PNG' where users_id = 'admin' and fs_uid = '2f5a2cca98794c9cb90033112d1c7304' and fs_pid is null;
 select * from file_system  where users_id = 'admin' and fs_uid = '2f5a2cca98794c9cb90033112d1c7304' and fs_pid is null;
---------------------------------------------------------------------2019/01/30
+--------------------------------------------------------------------

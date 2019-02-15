@@ -31,5 +31,9 @@ public class UserDao {
 	public User finduserPassword(User user) {
 		return sqlSession.selectOne("user.finduserPassword",user);
 	}
+
+	public void updateUser(User user) {
+		sqlSession.update("user.updateUser",user);
+	}
 	
 }
