@@ -6,10 +6,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title></title>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<base href="/">
+<title>Main</title>
+<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+<link href="css/sb-admin-2.min.css" rel="stylesheet">
 <style>
 	.change_button{
 		border: none;
@@ -46,125 +49,211 @@
 
 </style>
 </head>
-<body>
-	<jsp:include page="/WEB-INF/views/common/menu.jsp"/>
-	<h1>Storage</h1>
-	<sec:authentication property="principal.username" var="username"/>
-	<p>${username }님 안녕하세요</p>
-	<hr />
-	<%-- <p>스토리지 리스트 ${storageList }</p>
-	<p>세션 ${sessionScope.location }</p>
-	<c:out value="세션 ${sessionScope.location }" default="beam" /><br /> --%>
-	<form action="/storage/file/upload?${_csrf.parameterName }=${_csrf.token }" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="location" value="${sessionScope.location }" />
-		<div class="filebox">
-			<label for="fileupload">FileUpload</label>
-			<input type="file" 
-						 multiple="multiple"
-						 title="FileUpload" 
-						 id="fileupload"
-						 name="fileupload"
-						 onchange="this.form.submit()" />
-		</div>
-		<c:if test="${upload != null}">
-			<script>
-				alert('같은 이름이 존재합니다.');
-			</script>
-		</c:if>
-	</form>
-	<input type="checkbox" name="checkbox_all" id="checkbox_all" onchange="checkAllBox()" />
-	<label for="checkbox_all" >전체선택</label>
-	<button type="button" onclick="del()" class="btn btn-danger">삭제</button>
-	<form action="/storage/mkdir" method="post">
-		<sec:csrfInput/>
-		<input type="hidden" name="location" value="${sessionScope.location }" />
-		<div class="form-group">
-			<div class="col-xs-3">
-				<div class="input-group">
-					<input name="dirName" class="form-control" placeholder="폴더 이름을 입력하세요." />
-					<span class="input-group-btn">
-						<button type="submit" class="btn btn-primary">폴더 생성</button>
-					</span>
-				</div>
-				<c:if test="${mkdir != null}">
-					<script>
-						alert('같은 이름이 존재합니다.');
-					</script>
-				</c:if>
-			</div>
-		</div>
-	</form>
-	<ul>
-		<c:if test="${sessionScope.location == '' && storageList == '[]'}">
-			<p>파일이 하나도 없습니다! 업로드 하세요.</p>
-		</c:if>
-		<c:if test="${sessionScope.location != null && sessionScope.location != '' }">
-		<li>
-			<form:form action="/storage/parent" method="post" modelAttribute="storage">
-				<sec:csrfInput/>
-				<form:hidden path="users_id" value="${username }"/>
-				<form:hidden path="fs_pid" value="${sessionScope.location }"/>
-				<button type="submit" class="change_button">..</button>
-			</form:form>
-		</li>
-		</c:if>
-		<c:forEach items="${storageList }" var="storage" varStatus="status">
-			<c:if test="${storage.type eq 'd' }">
-			<li>
-				<form:form action="/storage/sub" method="post" modelAttribute="storage">
-					<sec:csrfInput/>
-					<form:hidden path="users_id" value="${storage.users_id }"/>
-					<form:hidden path="fs_uid" value="${storage.fs_uid }"/>
-					<form:hidden path="fs_pid" value="${storage.fs_pid }"/>
-					<form:hidden path="type" value="${storage.type }"/>
-					<form:hidden path="name" value="${storage.name }"/>
-					<input type="checkbox" name="checkbox" id="checkbox" onclick="checkboxChecker(this.form)" />
-					<button type="submit" class="change_button">${storage.name }</button>
-					<button type="button" class="btn btn-info" onclick="updateName(this.form);">수정</button>
-					<div class="form-group update-name"  style="display:none;">
-						<div class="col-xs-3">
-							<div class="input-group">
-								<input type="text" class="form-control" name="newName" value="${storage.name }"/>
-								<span class="input-group-btn">
-									<button type="button" 
-													class="btn btn-primary"
-													onclick="sendUpdate(this.form);">수정하기</button>
-								</span>
-							</div>
+<body id="page-top">
+	<div id="wrapper">
+		<jsp:include page="/WEB-INF/views/common/menu.jsp"/>
+	   <div id="content-wrapper" class="d-flex flex-column">
+	     <div id="content">
+	     <jsp:include page="/WEB-INF/views/common/topbar.jsp"/>
+	       <div class="container-fluid">
+	         <div class="d-sm-flex align-items-center justify-content-between mb-4">
+	           <h1 class="h3 mb-0 text-gray-800">Storage</h1>
+	         </div>
+	         <div class="row">
+						<div class="row-fluid">
+							<div class="btn-group">
+			        	<div class="col-xl-2">
+				         	<form action="/storage/file/upload?${_csrf.parameterName }=${_csrf.token }" method="post" enctype="multipart/form-data">
+										<input type="hidden" name="location" value="${sessionScope.location }" />
+										<div class="filebox">
+											<label for="fileupload" class="mr-3">FileUpload</label>
+											<input type="file" 
+														 multiple="multiple"
+														 title="FileUpload" 
+														 id="fileupload"
+														 name="fileupload"
+														 onchange="this.form.submit()" />
+										</div>
+										<c:if test="${upload != null}">
+											<script>
+												alert('같은 이름이 존재합니다.');
+											</script>
+										</c:if>
+									</form>
+			        	</div>
+			        	<div class="col-xl-4">
+			        		<div class="btn-group">
+				        		<label for="checkbox_all" class="btn btn-outline-success mb-0">
+											<input type="checkbox" 
+														 name="checkbox_all" 
+														 id="checkbox_all" 
+														 onchange="checkAllBox()"
+														 autocomplete="off">
+											<span class="glyphicon glyphicon-ok"></span>전체선택
+										</label>
+										<button type="button" onclick="del()" class="btn btn-outline-danger">삭제</button>
+			        		</div>
+			        	</div>
+			        	<div class="col-xl-6">
+									<form action="/storage/mkdir" method="post">
+										<sec:csrfInput/>
+										<input type="hidden" name="location" value="${sessionScope.location }" />
+										<div class="form-group">
+											<div class="col-xs-3">
+												<div class="input-group">
+													<input name="dirName" class="form-control" placeholder="폴더 이름을 입력하세요." />
+													<span class="input-group-btn">
+														<button type="submit" class="btn btn-outline-primary">폴더 생성</button>
+													</span>
+												</div>
+												<c:if test="${mkdir != null}">
+													<script>
+														alert('같은 이름이 존재합니다.');
+													</script>
+												</c:if>
+											</div>
+										</div>
+									</form>
+			        	</div>
+			        </div>
 						</div>
-					</div>
-				</form:form>
-			</li>
-			</c:if>
-			<c:if test="${storage.type eq 'f' }">
-			<li>
-				<form:form action="/storage/file" method="post" modelAttribute="storage">
-					<sec:csrfInput/>
-					<form:hidden path="users_id" value="${storage.users_id }"/>
-					<form:hidden path="fs_uid" value="${storage.fs_uid }"/>
-					<form:hidden path="fs_pid" value="${storage.fs_pid }"/>
-					<form:hidden path="type" value="${storage.type }"/>
-					<form:hidden path="name" value="${storage.name }"/>
-					<input type="checkbox" name="checkbox" id="checkbox" onclick="checkboxChecker(this.form);" />
-					<button type="submit" class="change_button">${storage.name }</button>
-					<button type="button" class="btn btn-info" onclick="updateName(this.form);">수정</button>
-					<div class="form-group update-name"  style="display:none;">
-						<div class="col-xs-3">
-							<div class="input-group">
-								<input type="text" class="form-control" name="newName" value="${storage.name }"/>
-								<span class="input-group-btn">
-									<button type="button" 
-													class="btn btn-primary"
-													onclick="sendUpdate(this.form);">수정하기</button>
-								</span>
-							</div>
-						</div>
-					</div>
-				</form:form>
-			</li>
-			</c:if>
-		</c:forEach>
-	</ul>
+	         <div class="row row-fluid w-100">
+	           <div class="col-lg-12">
+	             <div class="card shadow mb-4">
+	               <div class="card-body">
+	               	<div class="row">
+	               		<c:if test="${sessionScope.location == '' && storageList == '[]'}">
+											<p>파일이 하나도 없습니다! 업로드 하세요.</p>
+										</c:if>
+										<c:if test="${sessionScope.location != null && sessionScope.location != '' }">
+										<div class="col-md-2 col-sm-3 col-xs-4">
+											<form:form action="/storage/parent" method="post" modelAttribute="storage">
+												<sec:csrfInput/>
+												<form:hidden path="users_id" value="${username }"/>
+												<form:hidden path="fs_pid" value="${sessionScope.location }"/>
+												<div class="form-header">
+												<span></span>
+												</div>
+												<div class="form-content">
+													<button type="submit" class="change_button btn-block">
+														<img src="/image/goparents.jpg" alt=".." class="img-fluid" />
+														<br />
+														<span>상위폴더</span>
+													</button>
+												</div>
+												<div class="form-footer">
+												<span></span>
+												</div>
+											</form:form>
+										</div>
+										</c:if>
+										<c:forEach items="${storageList }" var="storage" varStatus="status">
+											<c:if test="${storage.type eq 'd' }">
+											<div class="col-md-2 col-sm-3 col-xs-4">
+												<form:form action="/storage/sub" method="post" modelAttribute="storage">
+													<sec:csrfInput/>
+													<form:hidden path="users_id" value="${storage.users_id }"/>
+													<form:hidden path="fs_uid" value="${storage.fs_uid }"/>
+													<form:hidden path="fs_pid" value="${storage.fs_pid }"/>
+													<form:hidden path="type" value="${storage.type }"/>
+													<form:hidden path="name" value="${storage.name }"/>
+													<div class="form-header">
+														<input type="checkbox" name="checkbox" id="checkbox" onclick="checkboxChecker(this.form)" />
+													</div>
+													<div class="form-content">
+														<button type="submit" class="change_button btn-block">
+															<img src="/image/folder.jpg" alt="${storage.name }" class="img-fluid" />
+															<br />
+															<span>${storage.name }</span> 
+														</button>
+													</div>
+													<hr />
+													<div class="form-footer">
+														<button type="button" class="btn btn-info" onclick="updateName(this.form);">수정</button>
+														<div class="form-group update-name"  style="display:none;">
+															<div class="col-xs-3">
+																<div class="input-group">
+																	<input type="text" class="form-control" name="newName" value="${storage.name }"/>
+																	<span class="input-group-btn">
+																		<button type="button" 
+																						class="btn btn-primary"
+																						onclick="sendUpdate(this.form);">수정하기</button>
+																	</span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</form:form>
+											</div>
+											</c:if>
+											<c:if test="${storage.type eq 'f' }">
+											<div class="col-md-2 col-sm-3 col-xs-4">
+												<form:form action="/storage/file" method="post" modelAttribute="storage">
+													<sec:csrfInput/>
+													<form:hidden path="users_id" value="${storage.users_id }"/>
+													<form:hidden path="fs_uid" value="${storage.fs_uid }"/>
+													<form:hidden path="fs_pid" value="${storage.fs_pid }"/>
+													<form:hidden path="type" value="${storage.type }"/>
+													<form:hidden path="name" value="${storage.name }"/>
+													<div class="form-header">
+														<input type="checkbox" name="checkbox" id="checkbox" onclick="checkboxChecker(this.form);" />
+													</div>
+													<div class="form-content">
+														<button type="submit" class="change_button">
+															<img src="/image/file.jpg" alt="${storage.name }" class="img-fluid" />
+															<br />
+															<span>${storage.name }</span> 
+														</button>
+													</div>
+													<hr />
+													<div class="form-footer">
+														<button type="button" class="btn btn-info" onclick="updateName(this.form);">수정</button>
+														<div class="form-group update-name" style="display:none;">
+															<div class="col-xs-3">
+																<div class="input-group">
+																	<input type="text" class="form-control" name="newName" value="${storage.name }"/>
+																	<span class="input-group-btn">
+																		<button type="button" 
+																						class="btn btn-primary"
+																						onclick="sendUpdate(this.form);">수정하기</button>
+																	</span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</form:form>
+											</div>
+											</c:if>
+										</c:forEach>
+	               	</div>
+	               </div>
+	             </div>
+	           </div>
+	         </div>
+	       </div>
+	     </div>
+	     <!-- Footer -->
+	     <footer class="sticky-footer bg-white">
+	       <div class="container my-auto">
+	         <div class="copyright text-center my-auto">
+	           <span>Copyright &copy; Your Website 2019</span>
+	         </div>
+	       </div>
+	     </footer>
+	     <!-- End of Footer -->
+	   </div>
+	   <!-- End of Content Wrapper -->
+	 </div>
+	 <!-- End of Page Wrapper -->
+	</div>
+	
+	<!-- Bootstrap core JavaScript-->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- Core plugin JavaScript-->
+	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+	<!-- Custom scripts for all pages-->
+	<script src="js/sb-admin-2.min.js"></script>
 	<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
  	<script>

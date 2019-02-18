@@ -6,150 +6,168 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title></title>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<base href="/">
+<title>Sign Up</title>
+<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+<link href="css/sb-admin-2.min.css" rel="stylesheet">
 </head>
-<body>
-	<div class="content">
-		<div class="container">
-			<div class="row">
-				<h2 class="text-center">회원 가입</h2>
-			</div>
-			<div class="row">
-				<form:form action="/user/signup" method="post" modelAttribute="user" class="form-horizontal">
-					<sec:csrfInput/>
-					<div class="form-group">
-						<form:label path="id" class="col-xs-3 col-xs-offset-1 control-label">아이디</form:label>
-						<div class="col-xs-4">
-							<div class="input-group">
-								<form:input path="id" class="form-control" id="id" />
-								<span class="input-group-btn">
-									<button type="button" class="btn btn-info" onclick="dualCheck();">중복확인</button>	
-								</span>
-							</div>
-							<form:errors path="id" class="text-danger" />
-						</div>
-					</div>
-					<div class="form-group">
-						<form:label path="password" class="col-xs-3 col-xs-offset-1 control-label">패스워드</form:label>
-						<div class="col-xs-4">
-							<form:password path="password" id="" class="form-control" />
-							<form:errors path="password" class="text-danger" />
-						</div>
-					</div>
-					<div class="form-group">
-						<form:label path="passwordchk" class="col-xs-3 col-xs-offset-1 control-label">패스워드확인</form:label>
-						<div class="col-xs-4">
-							<form:password path="passwordchk" id="" class="form-control" />
-							<form:errors path="passwordchk" class="text-danger" />
-						</div>
-					</div>
-					<div class="form-group">
-						<form:label path="name" class="col-xs-3 col-xs-offset-1 control-label">이름</form:label>
-						<div class="col-xs-4">
-							<form:input path="name" class="form-control" />
-							<form:errors path="name" class="text-danger" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-3 col-xs-offset-1 control-label">성별</label>
-						<div class="col-xs-4">
-							<label for="male" class="radio-inline">
-								<form:radiobutton path="gender" value="m" />남성
-							</label>
-							<label for="female" class="radio-inline">
-								<form:radiobutton path="gender" value="f" />여성
-							</label>
-						</div>
-						<div class="col-xs-8 col-xs-offset-4">
-							<form:errors path="gender" class="text-danger" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-3 col-xs-offset-1 control-label">전화번호</label>
-						<div class="col-xs-8">
-							<div class="col-xs-2 phone" style="padding-left: 0;">
-								<select id="phone1" class="form-control" onchange="makePhone();">
-									<option value="010">010</option>
-									<option value="011">011</option>
-									<option value="019">016</option>
-								</select>
-							</div>
-							<div class="col-xs-2">
-								<input class="form-control" name="phone2" id="phone2" maxlength="4" onkeyup="makePhone();"
-								value="${requestScope.phone2 }"/>
-							</div>
-							<div class="col-xs-2">
-								<input class="form-control" name="phone3" id="phone3" maxlength="4" onkeyup="makePhone();"
-								value="${requestScope.phone3 }"/>
-							</div>
-						</div>
-						<div class="col-xs-6 col-xs-offset-4">
-							<form:hidden path="phone" id="phone" value="${requestScope.phone }" />
-							<form:errors path="phone" class="text-danger" />
-						</div>
-					</div>
-					<div class="form-group">
-			  		<form:label path="email" class="col-xs-3 col-xs-offset-1 control-label">Email</form:label>
-				  	<div class="col-xs-4">
-				  		<div class="input-group">
-					  		<form:input path="email" id="email" class="form-control"/>
-					  		<span class="input-group-btn">
-									<button type="button" class="btn btn-info btn-block" id="email-btn" onclick="emailCertify();">
-						  			인증메일 발송
-						  		</button>
-								</span>
-				  		</div>
-				  	</div>
-				  	<div class="col-xs-2">
-				  		<input name="certifyCode" class="form-control" placeholder="인증코드 입력"
-				  			value="${requestScope.certifyCode }" />
-				  	</div>
-				  	<div class="col-xs-4 col-xs-offset-4">
-				  		<form:errors path="email" class="text-danger" />
-				  		<span id="email-error" class="text-danger"></span>
-				  	</div>
-			  	</div>
-					<div class="form-group">
-						<label class="col-xs-3 col-xs-offset-1 control-label">주소</label>
-						<div class="col-xs-4">
-							<div class="input-group">
-								<form:input path="postcode" id="postcode" class="form-control" 
-														placeholder="우편번호" readonly="true" />
-								<span class="input-group-btn">
-									<button type="button" class="btn btn-info" onclick="daumPostcode()">검색</button>
-								</span>
-							</div>
-							<form:errors path="postcode" class="text-danger" />
-							<br />
-							<input class="form-control" name="address1" id="address1" readonly="readonly" 
-							value="${requestScope.address1 }" />
-							<br />
-							<input class="form-control" name="address2" id="address2" placeholder="상세주소" 
-							onkeyup="makeAddress();" value="${requestScope.address2 }"/>
-							<form:hidden path="address" id="address" value="${requestScope.address }" />
-							<form:errors path="address" class="text-danger"  />
-						</div>
-					</div>
-					<div class="row">
-						<hr class="col-xs-5 col-xs-offset-3" />
-					</div>
-					<div class="form-group">
-						<div class="col-xs-2 col-xs-offset-4">
-							<button type="submit" class="btn btn-success form-control">가입하기</button>
-						</div>
-						<div class="col-xs-2">
-							<a href="/user/signin" class="btn btn-danger form-control">취소</a>
-						</div>
-					</div>
-				</form:form>
-			</div>
-		</div>
+<body class="bg-gradient-primary">
+	<div class="container">
+		<div class="row justify-content-center">
+	  	<div class="col-xl-10 col-lg-12 col-md-9">
+	    	<div class="card o-hidden border-0 shadow-lg my-5">
+	      	<div class="card-body p-0">
+	        	<div class="row justify-content-center">
+	          	<div class="col-lg-9">
+	            	<div class="p-5">
+		              <div class="text-center">
+		                <h1 class="h1 text-gray-800 mb-4">Sign Up</h1>
+		              </div>
+		              <form:form action="/user/signup" method="post" modelAttribute="user">
+									<sec:csrfInput/>
+									<div class="form-group">
+										<div class="input-group">
+											<form:input path="id" class="form-control form-control-user" placeholder="Enter ID" />
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-info" onclick="dualCheck();">중복확인</button>	
+											</span>
+										</div>
+										<form:errors path="id" class="text-danger" />
+									</div>
+									<div class="form-group">
+										<form:password path="password" id="" class="form-control form-control-user" placeholder="Password" />
+										<form:errors path="password" class="text-danger" />
+									</div>
+									<div class="form-group">
+										<form:password path="passwordchk" id="" class="form-control form-control-user" placeholder="Password Confirm" />
+										<form:errors path="passwordchk" class="text-danger" />
+									</div>
+									<div class="form-group">
+										<form:input path="name" class="form-control form-control-user" placeholder="Name" />
+										<form:errors path="name" class="text-danger" />
+									</div>
+									<div class="form-group">
+										
+										<label class="control-label">Gender  </label>
+										<div class="btn-group" data-toggle="buttons">
+											<label class="btn">
+												<span class="icon text-gray-600">
+													<form:radiobutton path="gender" value="m" />남성
+		                    </span>
+											</label>
+											<label class="btn">
+												<span class="icon text-gray-600">
+													<form:radiobutton path="gender" value="f" />여성
+		                    </span>
+											</label>
+										</div>
+										<div class="form-group">
+											<form:errors path="gender" class="text-danger" />
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row justify-content-around">
+											<div class="col-xl-2" style="padding: 0;">
+												<label class="control-label">전화번호</label>
+											</div>
+											<div class="col-xl-3 d-inline-block" style="padding: 1px;">
+												<select id="phone1" class="form-control" onchange="makePhone();">
+													<option value="010">010</option>
+													<option value="011">011</option>
+													<option value="019">016</option>
+												</select>
+											</div>
+											<div class="col-xl-3 d-inline-block" style="padding: 1px;">
+												<input class="form-control" name="phone2" id="phone2" maxlength="4" onkeyup="makePhone();"
+												value="${requestScope.phone2 }"/>
+											</div>
+											<div class="col-xl-3 d-inline-block" style="padding: 1px;">
+												<input class="form-control" name="phone3" id="phone3" maxlength="4" onkeyup="makePhone();"
+												value="${requestScope.phone3 }"/>
+											</div>
+										</div>
+										<form:hidden path="phone" id="phone" value="${requestScope.phone }" />
+										<form:errors path="phone" class="text-danger" />
+									</div>
+									<div class="form-group">
+								 		<div class="input-group">
+								  		<form:input path="email" 
+								 								id="email" 
+								 								class="form-control form-control-user"
+								 								placeholder="E-mail"/>
+									 		<span class="input-group-btn">
+												<button type="button" 
+																class="btn btn-info btn-block" 
+																id="email-btn" 
+																onclick="emailCertify();">
+									  			Send Code
+									  		</button>
+											</span>
+											<div class="col-lg-3">
+											<input name="certifyCode"
+														 class="form-control" 
+													 	 placeholder="Certify Code"
+														 value="${requestScope.certifyCode }" />
+											</div>
+										</div>
+								  	<div>
+								  		<form:errors path="email" class="text-danger" />
+								  		<span id="email-error" class="text-danger"></span>
+								  	</div>
+							  	</div>
+									<div class="form-group">
+										<label class="control-label">주소</label>
+										<div class="col-lg-12">
+											<div class="input-group">
+												<form:input path="postcode" id="postcode" class="form-control" 
+																		placeholder="우편번호" readonly="true" />
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-info" onclick="daumPostcode()">검색</button>
+												</span>
+											</div>
+											<form:errors path="postcode" class="text-danger" />
+											<br />
+											<input class="form-control" name="address1" id="address1" readonly="readonly" 
+											value="${requestScope.address1 }" />
+											<br />
+											<input class="form-control" name="address2" id="address2" placeholder="상세주소" 
+											onkeyup="makeAddress();" value="${requestScope.address2 }"/>
+											<form:hidden path="address" id="address" value="${requestScope.address }" />
+											<form:errors path="address" class="text-danger"  />
+										</div>
+									</div>
+									<div class="row justify-content-around">
+										<div class="col-lg-10">
+											<button type="submit" class="btn btn-success btn-user btn-block">가입하기</button>
+										</div>
+									</div>
+									<br />
+									<div class="row justify-content-around">
+										<div class="col-lg-10">
+											<a href="/user/signin" class="btn btn-danger btn-user btn-block">취소</a>
+										</div>
+									</div>
+								</form:form>
+	             </div>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
 	</div>
+	<!-- Bootstrap core JavaScript-->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- Core plugin JavaScript-->
+	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+	<!-- Custom scripts for all pages-->
+	<script src="/js/sb-admin-2.min.js"></script>
 	<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
- 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js" ></script>
  	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
  	<script>
  		function makePhone(){

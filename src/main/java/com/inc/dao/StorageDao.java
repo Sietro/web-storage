@@ -51,11 +51,11 @@ public class StorageDao {
 	}
 
 	public void fileNameUpdate(Storage storage) {
-		System.out.println("name: "+storage.getName());
-		System.out.println("pid: "+storage.getFs_pid());
-		System.out.println("uid: "+storage.getFs_uid());
-		System.out.println("id: "+storage.getUsers_id());
 		sqlSession.update("storage.fileNameUpdate", storage);
+	}
+
+	public List<Storage> checkLocation(Storage storage) {
+		return sqlSession.selectList("storage.checkLocation", storage);
 	}
 	
 }

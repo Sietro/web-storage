@@ -8,7 +8,7 @@
 	<secur:http pattern="/vendor/**" security="none" />
 	<secur:http pattern="/css/**" security="none" />
 	<secur:http pattern="/js/**" security="none" />
-	<secur:http pattern="/upload/image/**" security="none" />
+	<secur:http pattern="/image/**" security="none" />
 	<secur:http pattern="/upload/board/**" security="none" />
 	<secur:http pattern="/favicon.ico" security="none" />
 		

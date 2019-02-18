@@ -74,6 +74,15 @@
 		</if>
 		
 	</update>
+	
+	<select id="checkLocation" parameterType="Storage" resultType="Storage">
+		<if test="fs_pid != 'root'">
+			select * from file_system where fs_pid = #{fs_pid} and users_id = #{users_id}
+		</if>
+		<if test="fs_pid == 'root'">
+			select * from file_system where fs_pid is null and users_id = #{users_id}
+		</if>
+	</select>
 </mapper>
 
 

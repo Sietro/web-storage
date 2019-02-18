@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -116,10 +115,18 @@ public class StorageController {
 		if("".equals(location) || location == null) {
 			location = "root";
 		}
-		storageService.delete(fs_uid, location, users_id, name);
+		Storage storage = new Storage();
+		storage.setFs_pid(location);
+		storage.setUsers_id(users_id);
+		storage.setFs_uid(fs_uid);
+		storage.setName(name);
+		storageService.delete(storage);
 		Map<String, String> map = new HashMap<>();
 		map.put("isSuccess", "true");
 		map.put("name", name);
+		if(storageService.checkLocation(storage).size() == 0) {
+			session.setAttribute("location", storageService.getParentDir(storage).getFs_pid());
+		}
 		return map;
 	}
 	

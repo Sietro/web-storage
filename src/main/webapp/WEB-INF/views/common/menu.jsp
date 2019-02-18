@@ -1,37 +1,80 @@
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<div class="navbar navbar-inverse">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a href="/main" class="navbar-brand">WebStorage</a>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+	<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/main">
+		<div class="sidebar-brand-icon rotate-n-15">
+			<i class="fab fa-cloudversify"></i>
 		</div>
-		<div class="collapse navbar-collapse" id="navbar">
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="/main?fromMenu"><span class="glyphicon glyphicon-cloud"></span> Storage</a></li>
-				<li><a href="/board/notice/list"><span class="glyphicon glyphicon-list"></span> Notice</a></li>
-				<li><a href="/board/qna/list"><span class="glyphicon glyphicon-list"></span> QnA</a></li>
-				<sec:authorize access="hasRole('ROLE_USER')">
-				<li><a href="/mypage"><span class="glyphicon glyphicon-user"></span> Mypage</a></li>
-				</sec:authorize>
-				<sec:authorize access="hasRole('ROLE_ADMIN')">
-				<li><a href="/manage"><span class="glyphicon glyphicon-wrench"></span> Manage</a></li>
-				</sec:authorize>
-				<sec:authorize access="isAuthenticated()">
-				<form hidden="true" action="/user/signout" method="post" id="signoutForm">
-					<sec:csrfInput/>
-				</form>
-				<li><a href="javascript:formSubmit()"><span class="glyphicon glyphicon-log-out"></span> SignOut</a></li>
-				</sec:authorize>
-			</ul>
+		<div class="sidebar-brand-text mx-3">Web-Cloud</div>
+	</a>
+	<!-- Divider -->
+	<hr class="sidebar-divider my-0">
+
+	<!-- Nav Item - Dashboard -->
+	<li class="nav-item active">
+		<a class="nav-link" href="/main">
+			<i class="far fa-hdd"></i> <span>Storage</span>
+		</a>
+	</li>
+
+	<!-- Divider -->
+	<hr class="sidebar-divider">
+	
+	<!-- Heading -->
+	<div class="sidebar-heading">Board</div>
+	
+	<!-- Nav Item - Pages Collapse Menu -->
+	<li class="nav-item">
+		<a class="nav-link collapsed"
+			 href="#" 
+			 data-toggle="collapse" 
+			 data-target="#collapseTwo" 
+			 aria-expanded="true"
+			 aria-controls="collapseTwo"> 
+			<i class="fas fa-fw fa-calendar-check"></i> <span>Board</span>
+		</a>
+		<div id="collapseTwo"
+				 class="collapse" 
+				 aria-labelledby="headingTwo"
+				 data-parent="#accordionSidebar">
+			<div class="bg-gray-200 py-2 collapse-inner rounded">
+				<h6 class="collapse-header">Custom Components:</h6>
+				<a class="collapse-item" href="/board/notice/list">Notice</a> 
+				<a class="collapse-item" href="/board/qna/list">Q&A</a>
+			</div>
 		</div>
+	</li>
+
+	<!-- Divider -->
+	<hr class="sidebar-divider">
+
+	<!-- Heading -->
+	<div class="sidebar-heading">Config</div>
+
+	<!-- Nav Item - Pages Collapse Menu -->
+	<!-- Nav Item - Charts -->
+	<sec:authorize access="hasRole('ROLE_USER')">
+		<li class="nav-item">
+			<a class="nav-link" href="/mypage">
+				<i class="fas fa-fw fa-user-cog"></i> <span>Mypage</span>
+			</a>
+		</li>
+	</sec:authorize>
+
+	<!-- Nav Item - Tables -->
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+		<li class="nav-item">
+			<a class="nav-link" href="/manage"> 
+				<i class="fas fa-fw fa-cog"></i> <span>Manage</span>
+			</a>
+		</li>
+	</sec:authorize>
+	<!-- Divider -->
+	<hr class="sidebar-divider d-none d-md-block">
+	<!-- Sidebar Toggler (Sidebar) -->
+	<div class="text-center d-none d-md-inline">
+		<button class="rounded-circle border-0" id="sidebarToggle"></button>
 	</div>
-</div>
-<script>
-	function formSubmit() {
-		$("#signoutForm").submit();
-	}
-</script>
+</ul>
+<!-- End of Sidebar -->
+

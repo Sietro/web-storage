@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -112,17 +111,15 @@ public class StorageService {
 		storage.setFs_uid(getRandomString());
 		storage.setFs_pid(location);
 		storage.setName(dirName);
-		if(storageDao.fsDupCheck(storage) != null) {
-			if("새폴더".equals(dirName)) {
-				int i = 1;
-				while(storageDao.fsDupCheck(storage) != null) {
-					dirName = "새폴더("+i+")";
-					storage.setName(dirName);
-					i++;
-				}
-			}else {
-				return "isDuplicated";
+		if(storageDao.fsDupCheck(storage) == null || "새폴더".equals(dirName)) {
+			int i = 1;
+			while(storageDao.fsDupCheck(storage) != null) {
+				dirName = "새폴더("+i+")";
+				storage.setName(dirName);
+				i++;
 			}
+		}else {
+			return "isDuplicated";
 		}
 		storageDao.makeDir(storage);
 		File file = getRealPath(location, user.getId(), dirName);
@@ -132,8 +129,8 @@ public class StorageService {
 		return null;
 	}
 
-	public void delete(String fs_uid, String location, String users_id, String name) {
-		File file = getRealPath(location, users_id, name);
+	public void delete(Storage storage) {
+		File file = getRealPath(storage.getFs_pid(), storage.getUsers_id(), storage.getName());
 		if(file.exists()){
 			Boolean deleted = false;
 			if(file.isDirectory()) {
@@ -141,9 +138,8 @@ public class StorageService {
 			}else {				
 				deleted = file.delete();
 			}
-			System.out.println("파일삭제 : " + deleted);
 			if(deleted) {
-				storageDao.delete(fs_uid);
+				storageDao.delete(storage.getFs_uid());
 			}
         }
 	}
@@ -154,11 +150,9 @@ public class StorageService {
 		for (int i = 0; i < file_list.length; i++) {
 		    if(file_list[i].isFile()) {
 		    	file_list[i].delete();
-		    	System.out.println("파일이 삭제되었습니다.");
 		    }else {
 		    	File subFile = new File(file_list[i].getPath());
 		    	deleteFolder(subFile); //재귀함수호출
-		    	System.out.println("폴더가 삭제되었습니다.");
 		    }
 		    file_list[i].delete();
 		 }
@@ -191,5 +185,9 @@ public class StorageService {
 		storage.setName(newName);
 		storageDao.fileNameUpdate(storage);
 		return "success";
+	}
+
+	public List<Storage> checkLocation(Storage storage) {
+		return storageDao.checkLocation(storage);
 	}
 }
