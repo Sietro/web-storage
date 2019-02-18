@@ -28,52 +28,70 @@
 <body id="page-top">
 	<div id="wrapper">
 		<jsp:include page="/WEB-INF/views/common/menu.jsp"/>
-		<div class="content">
-			<div class="container">
-				<div class="row" style="padding-bottom:20px">
-					<h2 class="text-center" style="padding-bottom:10px">Notice</h2>
-				</div>
-				<div class="row">
-					<table class="table table-hover table-board">
-						<thead>
-							<tr>
-								<th width="10%">번호</th>
-								<th width="40%">제목</th>
-								<th width="20%">작성자</th>
-								<th width="20%">작성일</th>
-								<th width="10%">조회수</th>
-							</tr>
-						</thead>
-						<tbody>
-						<c:forEach var="board" items="${boardList}">
-							<tr style="cursor:pointer;" onclick="location.href='/board/notice/view?id=${board.id}'">
-								<td>${board.id }</td>
-								<td>${board.title }</td>
-								<td>${board.users_id }</td>
-								<td>${board.regdate }</td>
-								<td>${board.hit }</td>
-							</tr>
-						</c:forEach>
-						</tbody>
-						<tfoot>
-							<tr>
-								<td colspan="5" class="text-right">
-									<a href="/board/notice/insert" class="btn btn-primary">글쓰기</a>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="5" style="border-top:none;">
-									<ul class="pagination">
-										${pageHTML }
-									</ul>
-								</td>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</div>
+		<div id="content-wrapper" class="d-flex flex-column">
+			<div id="content">
+			<jsp:include page="/WEB-INF/views/common/topbar.jsp"/>
+	       <!-- Begin Page Content -->
+	       <div class="container-fluid">
+	         <!-- Page Heading -->
+	         <h1 class="h3 mb-2 text-gray-800">Notice</h1>
+	         <!-- DataTales Example -->
+	         <div class="card shadow mb-4">
+	           <div class="card-header py-3">
+	             <h6 class="m-0 font-weight-bold text-primary">공지사항</h6>
+	           </div>
+	           <div class="card-body">
+	             <div class="table-responsive">
+	               <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+	                 <thead>
+					          <tr>
+						          <th width="10%">번호</th>
+											<th width="40%">제목</th>
+											<th width="20%">작성자</th>
+											<th width="20%">작성일</th>
+											<th width="10%">조회수</th>
+					          </tr>
+	                 </thead>
+	                 <tbody>
+	                 <c:forEach var="board" items="${boardList}">
+	                   <tr class="text-primary" style="cursor:pointer;" onclick="location.href='/board/notice/view?id=${board.id}'">
+	                    <td>${board.id }</td>
+											<td>${board.title }</td>
+											<td>${board.users_id }</td>
+											<td>${board.regdate }</td>
+											<td>${board.hit }</td>
+	                   </tr>
+	                 </c:forEach> 
+	                 </tbody>
+	                 <tfoot>
+										<tr>
+											<td colspan="5" style="border-top:none;">
+												<div class="row">
+													<div class="col-lg-8">
+														<ul class="pagination">
+															${pageHTML }
+														</ul>
+													</div>
+													<div class="col-lg-4 text-right">
+														<c:if test="${sessionScope.user.id eq 'admin'}">
+															<a href="/board/notice/insert" class="btn btn-primary">글쓰기</a>
+														</c:if>
+													</div>
+												</div>
+											</td>
+										</tr>
+									</tfoot>
+	               </table>
+	             </div>
+	           </div>
+	         </div>
+	       </div>
+	       <!-- /.container-fluid -->
+	     </div>
+	     <!-- End of Main Content -->
 		</div>
 	</div>
+
 	<!-- Bootstrap core JavaScript-->
 	<script src="vendor/jquery/jquery.min.js"></script>
 	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
