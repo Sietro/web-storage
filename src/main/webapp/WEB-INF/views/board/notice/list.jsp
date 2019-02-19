@@ -66,17 +66,15 @@
 	                 <tfoot>
 										<tr>
 											<td colspan="5" style="border-top:none;">
-												<div class="row">
-													<div class="col-lg-8">
-														<ul class="pagination">
-															${pageHTML }
-														</ul>
-													</div>
-													<div class="col-lg-4 text-right">
-														<c:if test="${sessionScope.user.id eq 'admin'}">
-															<a href="/board/notice/insert" class="btn btn-primary">글쓰기</a>
-														</c:if>
-													</div>
+												<div>
+													<ul class="pagination" style="justify-content: center;">
+														${pageHTML }
+													</ul>
+												</div>
+												<div class="text-right">
+													<c:if test="${sessionScope.user.id eq 'admin'}">
+													<a href="/board/notice/insert" class="btn btn-primary">글쓰기</a>
+													</c:if>
 												</div>
 											</td>
 										</tr>

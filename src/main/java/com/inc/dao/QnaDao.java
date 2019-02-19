@@ -19,8 +19,8 @@ public class QnaDao {
 		return sqlSession.selectList("qna_board.selectListFromBoard", map);
 	}
 
-	public int getTotalCount() {
-		return sqlSession.selectOne("qna_board.totalCount");
+	public int getTotalCount(String users_id) {
+		return sqlSession.selectOne("qna_board.totalCount", users_id);
 	}
 
 	public void insertBoard(Board board) {

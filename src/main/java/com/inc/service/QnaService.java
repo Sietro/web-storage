@@ -23,8 +23,8 @@ public class QnaService {
 	@Autowired
 	private QnaReplyDao replyDao;
 	
-	public  String getPaging(int page) {
-		int total = boardDao.getTotalCount();
+	public  String getPaging(int page, String users_id) {
+		int total = boardDao.getTotalCount(users_id);
 		return Pager.paging("qna",page, total);
 	}
 

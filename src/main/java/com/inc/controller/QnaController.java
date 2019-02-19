@@ -32,10 +32,10 @@ public class QnaController {
 	private HttpServletRequest request;
 	
 	@RequestMapping(value="/board/qna/list", method=RequestMethod.GET)
-	public String noticeGet(@RequestParam(defaultValue="1") int page,
+	public String qnaGet(@RequestParam(defaultValue="1") int page,
 							@AuthenticationPrincipal User user,
 							Model model ) {
-		model.addAttribute("pageHTML", boardService.getPaging(page));
+		model.addAttribute("pageHTML", boardService.getPaging(page, user.getId()));
 		if("admin".equals(user.getId())) {
 			model.addAttribute("boardList", boardService.getBoardList(page, "admin"));
 		}else {
@@ -46,17 +46,19 @@ public class QnaController {
 	}
 	
 	@RequestMapping(value="/board/qna/insert", method=RequestMethod.GET)
-	public String noticeAdd(Model model) {
+	public String qnaAdd(Model model) {
 		model.addAttribute("board", new Board());
 		return "/board/qna/insert";
 	}
 	
 	@RequestMapping(value="/board/qna/insert", method=RequestMethod.POST)
-	public String noticeAddPost(@ModelAttribute @Valid  Board board, BindingResult result) {
+	public String qnaAddPost(@ModelAttribute @Valid  Board board,
+								BindingResult result,
+								@AuthenticationPrincipal User user) {
 		if(result.hasErrors()) {
 			return "/board/qna/insert";
 		}
-		board.setUsers_id(((User)session.getAttribute("user")).getId());
+		board.setUsers_id(user.getId());
 		board.setIp(request.getRemoteAddr());
 		boardService.add(board);
 		return "redirect:/board/qna/list";
@@ -70,8 +72,7 @@ public class QnaController {
 	}
 	
 	@RequestMapping(value="/board/qna/delete", method=RequestMethod.GET)
-	public String delete(@RequestParam int id, Model model) {
-		User user = (User)session.getAttribute("user");
+	public String delete(@RequestParam int id, Model model, @AuthenticationPrincipal User user) {
 		Board board = boardService.getBoard(id);
 		if(user.getId().equals(board.getUsers_id()) || "admin".equals(user.getId())) {
 			boardService.deleteBoard(id);
@@ -85,8 +86,7 @@ public class QnaController {
 	}
 	
 	@RequestMapping(value="/board/qna/update", method=RequestMethod.GET)
-	public String update(@RequestParam int id, Model model) {
-		User user = (User)session.getAttribute("user");
+	public String update(@RequestParam int id, Model model, @AuthenticationPrincipal User user) {
 		Board board = boardService.getBoard(id);
 		if(user.getId().equals(board.getUsers_id()) || "admin".equals(user.getId())) {
 			model.addAttribute("board", board);
@@ -99,8 +99,10 @@ public class QnaController {
 	}
 	
 	@RequestMapping(value="/board/qna/update", method=RequestMethod.POST)
-	public String updatePost(@ModelAttribute @Valid Board board, BindingResult result, Model model) {
-		User user = (User)session.getAttribute("user");
+	public String updatePost(@ModelAttribute @Valid Board board, 
+							 BindingResult result, 
+							 Model model,
+							 @AuthenticationPrincipal User user) {
 		Board existboard = boardService.getBoard(board.getId());
 		if(user.getId().equals(existboard.getUsers_id())) {
 			if(result.hasErrors()) {

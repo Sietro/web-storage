@@ -46,11 +46,13 @@ public class NoticeController {
 	}
 	
 	@RequestMapping(value="/board/notice/insert", method=RequestMethod.POST)
-	public String noticeAddPost(@ModelAttribute @Valid  Board board, BindingResult result) {
+	public String noticeAddPost(@ModelAttribute @Valid  Board board,
+								BindingResult result,
+								@AuthenticationPrincipal User user) {
 		if(result.hasErrors()) {
 			return "/board/notice/insert";
 		}
-		board.setUsers_id(((User)session.getAttribute("user")).getId());
+		board.setUsers_id(user.getId());
 		board.setIp(request.getRemoteAddr());
 		boardService.add(board);
 		return "redirect:/board/notice/list";
@@ -64,8 +66,9 @@ public class NoticeController {
 	}
 	
 	@RequestMapping(value="/board/notice/delete", method=RequestMethod.GET)
-	public String delete(@RequestParam int id, Model model) {
-		User user = (User)session.getAttribute("user");
+	public String delete(@RequestParam int id,
+						 Model model,
+						 @AuthenticationPrincipal User user) {
 		Board board = boardService.getBoard(id);
 		if(user.getId().equals(board.getUsers_id()) || "admin".equals(user.getId())) {
 			boardService.deleteBoard(id);
@@ -79,8 +82,9 @@ public class NoticeController {
 	}
 	
 	@RequestMapping(value="/board/notice/update", method=RequestMethod.GET)
-	public String update(@RequestParam int id, Model model) {
-		User user = (User)session.getAttribute("user");
+	public String update(@RequestParam int id,
+						 Model model,
+						 @AuthenticationPrincipal User user) {
 		Board board = boardService.getBoard(id);
 		if(user.getId().equals(board.getUsers_id()) || "admin".equals(user.getId())) {
 			model.addAttribute("board", board);
@@ -93,8 +97,10 @@ public class NoticeController {
 	}
 	
 	@RequestMapping(value="/board/notice/update", method=RequestMethod.POST)
-	public String updatePost(@ModelAttribute @Valid Board board, BindingResult result, Model model) {
-		User user = (User)session.getAttribute("user");
+	public String updatePost(@ModelAttribute @Valid Board board, 
+							 BindingResult result,
+							 Model model,
+							 @AuthenticationPrincipal User user) {
 		Board existboard = boardService.getBoard(board.getId());
 		if(user.getId().equals(existboard.getUsers_id())) {
 			if(result.hasErrors()) {

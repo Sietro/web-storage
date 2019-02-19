@@ -16,7 +16,7 @@
 	</select>
 	
 	<select id="totalCount" parameterType="String" resultType="int">
-		select count(*) from qna
+		select count(*) from qna where users_id = #{value}
 	</select>
 	
 	<insert id="insertBoard" parameterType="Board">
