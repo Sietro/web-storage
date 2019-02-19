@@ -127,7 +127,7 @@
 										</c:if>
 										<c:if test="${sessionScope.location != null && sessionScope.location != '' }">
 										<div class="col-md-2 col-sm-3 col-xs-4">
-											<form:form action="/storage/parent" method="post" modelAttribute="storage">
+											<form:form action="/storage/parent" method="post" modelAttribute="storage" class="w-100">
 												<sec:csrfInput/>
 												<form:hidden path="users_id" value="${username }"/>
 												<form:hidden path="fs_pid" value="${sessionScope.location }"/>
@@ -150,7 +150,7 @@
 										<c:forEach items="${storageList }" var="storage" varStatus="status">
 											<c:if test="${storage.type eq 'd' }">
 											<div class="col-md-2 col-sm-3 col-xs-4">
-												<form:form action="/storage/sub" method="post" modelAttribute="storage">
+												<form:form action="/storage/sub" method="post" modelAttribute="storage" class="w-100">
 													<sec:csrfInput/>
 													<form:hidden path="users_id" value="${storage.users_id }"/>
 													<form:hidden path="fs_uid" value="${storage.fs_uid }"/>
@@ -188,7 +188,7 @@
 											</c:if>
 											<c:if test="${storage.type eq 'f' }">
 											<div class="col-md-2 col-sm-3 col-xs-4">
-												<form:form action="/storage/file" method="post" modelAttribute="storage">
+												<form:form action="/storage/file" method="post" modelAttribute="storage" class="w-100">
 													<sec:csrfInput/>
 													<form:hidden path="users_id" value="${storage.users_id }"/>
 													<form:hidden path="fs_uid" value="${storage.fs_uid }"/>

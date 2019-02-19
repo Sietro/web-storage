@@ -139,10 +139,11 @@ alter table file_system modify fs_uid varchar2(260 BYTE);
 alter table file_system modify fs_pid varchar2(260 BYTE);
 select * from file_system where users_id = 'admin' and fs_uid = 'admin001';
 select * from file_system where fs_uid = '53f97c2ade6f4fcc9357d8bdec6f0b97';
-delete from file_system;
+delete from file_system where users_id ='test1';
 
 select * from file_system;
 select * from file_system where users_id = 'admin' and fs_pid = 'aecdbc4c328c4be4bb76b7320edce3fa';
 update file_system set name = 'before.PNG' where users_id = 'admin' and fs_uid = '2f5a2cca98794c9cb90033112d1c7304' and fs_pid is null;
 select * from file_system  where users_id = 'admin' and fs_uid = '2f5a2cca98794c9cb90033112d1c7304' and fs_pid is null;
+select * from file_system where users_id = 'test' and 
 --------------------------------------------------------------------

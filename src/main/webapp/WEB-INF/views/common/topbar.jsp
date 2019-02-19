@@ -29,7 +29,7 @@
     <!-- Nav Item - User Information -->
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-     		 <span class="mr-2 d-none d-lg-inline btn btn-outline-success">'${username }'님 안녕하세요.</span> 
+     		 <span class="mr-2 d-none d-lg-inline btn btn-outline-success">[${username }]님 안녕하세요.</span> 
       </a>
       <!-- Dropdown - User Information -->
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

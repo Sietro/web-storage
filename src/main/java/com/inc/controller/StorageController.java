@@ -125,7 +125,11 @@ public class StorageController {
 		map.put("isSuccess", "true");
 		map.put("name", name);
 		if(storageService.checkLocation(storage).size() == 0) {
-			session.setAttribute("location", storageService.getParentDir(storage).getFs_pid());
+			if("root".equals(location)) {
+				session.setAttribute("location", null);
+			}else {
+				session.setAttribute("location", storageService.getParentDir(storage).getFs_pid());
+			}
 		}
 		return map;
 	}
