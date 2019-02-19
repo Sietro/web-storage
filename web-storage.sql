@@ -14,7 +14,7 @@ create table users(
     address varchar2(100) not null
 );
 select * from users;
-insert into users values('admin', 'tnc87409123@', 'ê´?ë¦¬ì', 'm', '01075524110', 'tncrja@naver.com', '05707', '?„œ?š¸ ?†¡?ŒŒêµ? ?†¡?´ë¡? 88(ê°??½??ë¦¼ì•„?ŒŒ?Š¸) 1?™');
+insert into users values('admin', 'tnc87409123@', 'ï¿½?ë¦¬ì', 'm', '01075524110', 'tncrja@naver.com', '05707', '?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½ï¿½? 88(ï¿½??ï¿½ï¿½??ë¦¼ì•„?ï¿½ï¿½?ï¿½ï¿½) 1?ï¿½ï¿½');
 select * from user_constraints where table_name = 'USERS';
 alter table users modify password varchar2(60);
 update users set password = '$2a$10$mulmpBP8.iCG5PT8dQpP3uICKqs5kgGiwjNLIDrQfKYSkWq0dwqde' where id = 'test1';
@@ -72,7 +72,7 @@ create table qna(
 create sequence seq_qna_id;
 
 select * from qna;
-insert into qna values(seq_qna_id.nextval, 'admin', '?…Œ?Š¤?Š¸?š©', '?…Œ?Š¤?Š¸ë¥? ?œ„?•œ ê²Œì‹œë¬? ?…?‹ˆ?‹¤.', 10, '192.168.0.25', sysdate);
+insert into qna values(seq_qna_id.nextval, 'admin', '?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½', '?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½ ê²Œì‹œï¿½? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½.', 10, '192.168.0.25', sysdate);
 
 ------------------------------------------------------------------------------------
 create table notice_reply(
@@ -139,7 +139,7 @@ alter table file_system modify fs_uid varchar2(260 BYTE);
 alter table file_system modify fs_pid varchar2(260 BYTE);
 select * from file_system where users_id = 'admin' and fs_uid = 'admin001';
 select * from file_system where fs_uid = '53f97c2ade6f4fcc9357d8bdec6f0b97';
-delete from file_system where users_id ='test1';
+delete from file_system;
 
 select * from file_system;
 select * from file_system where users_id = 'admin' and fs_pid = 'aecdbc4c328c4be4bb76b7320edce3fa';
