@@ -26,7 +26,7 @@ public class StorageService {
 	@Autowired
 	private MultipartHttpServletRequest multiPartHttpServletRequest;
 	
-	private static final String filePath = "/home/ubunut/storage/";
+	private static final String filePath = "/home/ubuntu/storage/";
 
 	public List<Storage> getList(Storage storage) {
 		File file = new File(filePath+storage.getUsers_id());
