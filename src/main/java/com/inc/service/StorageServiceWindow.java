@@ -18,7 +18,7 @@ import com.inc.domain.Storage;
 import com.inc.domain.User;
 
 @Service
-public class StorageService {
+public class StorageServiceWindow {
 	
 	@Autowired
 	private StorageDao storageDao;
@@ -26,7 +26,7 @@ public class StorageService {
 	@Autowired
 	private MultipartHttpServletRequest multiPartHttpServletRequest;
 	
-	private static final String filePath = "/webstorage/";
+	private static final String filePath = "C:\\webstorage\\";
 
 	public List<Storage> getList(Storage storage) {
 		File file = new File(filePath+storage.getUsers_id());
@@ -62,11 +62,11 @@ public class StorageService {
     }
 	
 	private File getRealPath(String location, String id, String name) {
-		String path = "/root/";
+		String path = "\\root\\";
 		if(!"root".equals(location)) {
 			String realpath = "";
 			while(location != null) {
-				realpath = storageDao.getParent_name(location).getName() + "/" + realpath;
+				realpath = storageDao.getParent_name(location).getName() + "\\" + realpath;
 				location = storageDao.getParent_name(location).getFs_pid();
 			}
 			path = path + realpath;
@@ -93,7 +93,7 @@ public class StorageService {
 				return "isDuplicated";
 			}
 	        if(multipartFile.isEmpty() == false){
-                file = new File(file.getPath()+ "/" + multipartFile.getOriginalFilename());
+                file = new File(file.getPath()+ "\\" + multipartFile.getOriginalFilename());
                 storageDao.saveFile(storage);
                 try {
 					multipartFile.transferTo(file);
