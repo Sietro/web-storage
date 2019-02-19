@@ -26,7 +26,7 @@ public class StorageService {
 	@Autowired
 	private MultipartHttpServletRequest multiPartHttpServletRequest;
 	
-	private static final String filePath = "/webstorage/";
+	private static final String filePath = "/WEB-INF/upload/storage";
 
 	public List<Storage> getList(Storage storage) {
 		File file = new File(filePath+storage.getUsers_id());
