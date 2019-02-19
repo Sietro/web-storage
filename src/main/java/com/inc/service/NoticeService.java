@@ -25,7 +25,7 @@ public class NoticeService {
 	
 	public  String getPaging(int page) {
 		int total = boardDao.getTotalCount();
-		return Pager.paging(page, total);
+		return Pager.paging("notice", page, total);
 	}
 
 	public List<Board> getBoardList(int page) {

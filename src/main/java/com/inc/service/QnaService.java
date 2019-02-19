@@ -25,7 +25,7 @@ public class QnaService {
 	
 	public  String getPaging(int page) {
 		int total = boardDao.getTotalCount();
-		return Pager.paging(page, total);
+		return Pager.paging("qna",page, total);
 	}
 
 	public List<Board> getBoardList(int page, String users_id) {

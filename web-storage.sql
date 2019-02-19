@@ -14,7 +14,7 @@ create table users(
     address varchar2(100) not null
 );
 select * from users;
-insert into users values('admin', 'tnc87409123@', 'ê´€ë¦¬ì', 'm', '01075524110', 'tncrja@naver.com', '05707', 'ì„œìš¸ ì†¡íŒŒêµ¬ ì†¡ì´ë¡œ 88(ê°€ë½ëŒ€ë¦¼ì•„íŒŒíŠ¸) 1ë™');
+insert into users values('admin', 'tnc87409123@', 'ê´?ë¦¬ì', 'm', '01075524110', 'tncrja@naver.com', '05707', '?„œ?š¸ ?†¡?ŒŒêµ? ?†¡?´ë¡? 88(ê°??½??ë¦¼ì•„?ŒŒ?Š¸) 1?™');
 select * from user_constraints where table_name = 'USERS';
 alter table users modify password varchar2(60);
 update users set password = '$2a$10$mulmpBP8.iCG5PT8dQpP3uICKqs5kgGiwjNLIDrQfKYSkWq0dwqde' where id = 'test1';
@@ -58,7 +58,7 @@ drop sequence seq_board_id;
 drop table board;
 select * from board;
 
-insert into notice values(seq_notice_id.nextval, 'admin', 'í…ŒìŠ¤íŠ¸ìš©', 'í…ŒìŠ¤íŠ¸ë¥¼ ìœ„í•œ ê²Œì‹œë¬¼ ì…ë‹ˆë‹¤.', 10, '192.168.0.25', sysdate);
+insert into notice values(seq_notice_id.nextval, 'admin', 'title', 'content.', 10, '192.168.0.25', sysdate);
 ---------------------------------------------------------------------------------
 create table qna(
     id number primary key,
@@ -72,7 +72,7 @@ create table qna(
 create sequence seq_qna_id;
 
 select * from qna;
-insert into qna values(seq_qna_id.nextval, 'admin', 'í…ŒìŠ¤íŠ¸ìš©', 'í…ŒìŠ¤íŠ¸ë¥¼ ìœ„í•œ ê²Œì‹œë¬¼ ì…ë‹ˆë‹¤.', 10, '192.168.0.25', sysdate);
+insert into qna values(seq_qna_id.nextval, 'admin', '?…Œ?Š¤?Š¸?š©', '?…Œ?Š¤?Š¸ë¥? ?œ„?•œ ê²Œì‹œë¬? ?…?‹ˆ?‹¤.', 10, '192.168.0.25', sysdate);
 
 ------------------------------------------------------------------------------------
 create table notice_reply(

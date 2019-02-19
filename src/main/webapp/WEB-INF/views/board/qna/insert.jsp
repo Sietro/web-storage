@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <base href="/">
-<title>Q&A</title>
+<title>QnA</title>
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -18,31 +18,44 @@
 <body id="page-top">
 	<div id="wrapper">
 		<jsp:include page="/WEB-INF/views/common/menu.jsp"/>
-		<div class="content">
-			<div class="container-fluid" style="width:80%">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<h4>글쓰기</h4>
-					</div>
-					<div class="panel-body">
-						<form:form action="/board/qna/insert" method="post" modelAttribute="board">
-							<sec:csrfInput/>
-							<div class="form-group">
-								<form:input class="form-control" path="title" placeholder="제목을 입력해 주세요"/>
-								<form:errors path="title" class="error text-danger" />
-							</div>
-							<div class="form-group">
-								<form:textarea class="form-control" id="content" path="content"
-								 placeholder="내용을 입력해 주세요"></form:textarea>
-								 <form:errors path="content" class="error text-danger" />
-							</div>
-							<div class="form-group text-right">
-								<button class="btn btn-primary" type="submit">등록</button>
-							</div>
-						</form:form>
-					</div>
-				</div>
-			</div>
+		<div id="content-wrapper" class="d-flex flex-column">
+			<div id="content">
+			<jsp:include page="/WEB-INF/views/common/topbar.jsp"/>
+	       <!-- Begin Page Content -->
+	       <div class="container-fluid">
+	         <!-- Page Heading -->
+	         <h1 class="h3 mb-2 text-gray-800">QnA</h1>
+	         <!-- DataTales Example -->
+	         <div class="card shadow mb-4">
+	           <div class="card-header py-3">
+	             <h6 class="m-0 font-weight-bold text-primary">글쓰기</h6>
+	           </div>
+	           <div class="card-body" id="summernote">
+		           <form:form action="/board/qna/insert" method="post" modelAttribute="board">
+								<sec:csrfInput/>
+								<div class="form-group">
+									<form:input class="form-control" path="title" placeholder="제목을 입력해 주세요"/>
+									<form:errors path="title" class="error text-danger" />
+								</div>
+								<hr />
+								<div class="form-group">
+									<form:textarea class="form-control" 
+																 id="content" 
+																 path="content"
+																 style="height: 500px;"
+									 							 placeholder="내용을 입력해 주세요"></form:textarea>
+									<form:errors path="content" class="error text-danger" />
+								</div>
+								<div class="form-group text-right">
+									<button class="btn btn-primary" type="submit">등록</button>
+								</div>
+							</form:form>
+	           </div>
+	         </div>
+	       </div>
+	       <!-- /.container-fluid -->
+	     </div>
+	     <!-- End of Main Content -->
 		</div>
 	</div>
 	<!-- Bootstrap core JavaScript-->
@@ -58,10 +71,15 @@
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/lang/summernote-ko-KR.min.js"></script>
   <script>
-  	$("#content").summernote({
-  		height:400,
+  	$("#summernote").summernote({
+  		height:450,
   		disableResizeEditor:true,
   		lang: 'ko-KR',
+ 		  popover: {
+ 	         image: [],
+ 	         link: [],
+ 	         air: []
+ 	    },
   		callbacks:{
   			onImageUpload:sendFile,
   			onMediaDelete:deleteFile
@@ -90,7 +108,7 @@
   			data:data,
   			type:"post",
   			success:function(data){
-  				$("#content").summernote('editor.insertImage', data.url);
+  				$("#summernote").summernote('editor.insertImage', data.url);
   			},error:function(error){
   				console.error(error);
   			}

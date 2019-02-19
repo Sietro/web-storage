@@ -18,32 +18,45 @@
 <body id="page-top">
 	<div id="wrapper">
 		<jsp:include page="/WEB-INF/views/common/menu.jsp"/>
-		<div class="content">
-			<div class="container-fluid" style="width:80%">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<h4>글수정</h4>
-					</div>
-					<div class="panel-body">
-						<form:form action="/board/notice/update" method="post" modelAttribute="board">
-							<sec:csrfInput/>
-							<form:hidden path="id" />
-							<div class="form-group">
-								<form:input class="form-control" path="title" placeholder="제목을 입력해 주세요"/>
-								<form:errors path="title" class="error text-danger" />
-							</div>
-							<div class="form-group">
-								<form:textarea class="form-control" id="content" path="content"
-										  placeholder="내용을 입력해 주세요"></form:textarea>
-								<form:errors path="title" class="error text-danger" />
-							</div>
-							<div class="form-group text-right">
-								<button class="btn btn-primary" type="submit">수정</button>
-							</div>
-						</form:form>
-					</div>
-				</div>
-			</div>
+		<div id="content-wrapper" class="d-flex flex-column">
+			<div id="content">
+			<jsp:include page="/WEB-INF/views/common/topbar.jsp"/>
+	       <!-- Begin Page Content -->
+	       <div class="container-fluid">
+	         <!-- Page Heading -->
+	         <h1 class="h3 mb-2 text-gray-800">Notice</h1>
+	         <!-- DataTales Example -->
+	         <div class="card shadow mb-4">
+	           <div class="card-header py-3">
+	             <h6 class="m-0 font-weight-bold text-primary">글수정</h6>
+	           </div>
+	           <div class="card-body" id="summernote">
+          		<form:form action="/board/notice/update" method="post" modelAttribute="board">
+								<sec:csrfInput/>
+								<form:hidden path="id" />
+								<div class="form-group">
+									<form:input class="form-control" path="title" placeholder="제목을 입력해 주세요"/>
+									<form:errors path="title" class="error text-danger" />
+								</div>
+								<hr />
+								<div class="form-group">
+									<form:textarea class="form-control" 
+															 id="content" 
+															 path="content"
+															 style="height: 500px;"
+								 							 placeholder="내용을 입력해 주세요"></form:textarea>
+								<form:errors path="content" class="error text-danger" />
+								</div>
+								<div class="form-group text-right">
+									<button class="btn btn-primary" type="submit">수정</button>
+								</div>
+							</form:form>
+	           </div>
+	         </div>
+	       </div>
+	       <!-- /.container-fluid -->
+	     </div>
+	     <!-- End of Main Content -->
 		</div>
 	</div>
 	<!-- Bootstrap core JavaScript-->
@@ -73,15 +86,20 @@
 	 		f.submit();
 	 	}
 	 
-	 	$("#content").summernote({
-	 		height:400,
-	 		disableResizeEditor:true,
-	 		lang: 'ko-KR',
-	 		callbacks:{
-	 			onImageUpload:sendFile,
-	 			onMediaDelete:deleteFile
-	 		}
-	 	});
+	 	$("#summernote").summernote({
+	  		height:450,
+	  		disableResizeEditor:true,
+	  		lang: 'ko-KR',
+	 		  popover: {
+	 	         image: [],
+	 	         link: [],
+	 	         air: []
+	 	    },
+	  		callbacks:{
+	  			onImageUpload:sendFile,
+	  			onMediaDelete:deleteFile
+	  		}
+	  	});
 	 	
 	 	function deleteFile(target){
 	 		var src = target[0].src.substring(21);
@@ -106,7 +124,7 @@
 	 			data:data,
 	 			type:"post",
 	 			success:function(data){
-	 				$("#content").summernote('editor.insertImage', data.url);
+	 				$("#summernote").summernote('editor.insertImage', data.url);
 	 			},error:function(error){
 	 				console.error(error);
 	 			}
