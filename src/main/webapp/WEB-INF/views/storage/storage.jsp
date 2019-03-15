@@ -125,7 +125,7 @@
 	               		<c:if test="${sessionScope.location == '' && storageList == '[]'}">
 											<p>파일이 하나도 없습니다! 업로드 하세요.</p>
 										</c:if>
-										<c:if test="${sessionScope.location != null && sessionScope.location != '' }">
+										<c:if test="${sessionScope.location != null && sessionScope.location != '' && sessionScope.location != 'root' }">
 										<div class="col-md-2 col-sm-3 col-xs-4">
 											<form:form action="/storage/parent" method="post" modelAttribute="storage" class="w-100">
 												<sec:csrfInput/>

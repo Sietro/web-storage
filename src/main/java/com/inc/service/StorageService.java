@@ -31,6 +31,7 @@ public class StorageService {
 	public List<Storage> getList(Storage storage) {
 		File file = new File(filePath+storage.getUsers_id());
         if(file.exists() == false){
+        	grantPermission(file.getPath());
             file.mkdirs();
         }
 		return storageDao.getList(storage);
@@ -80,6 +81,7 @@ public class StorageService {
 	    MultipartFile multipartFile = null;
         File file = getRealPath(location, user.getId(), "");
         if(file.exists() == false){
+        	grantPermission(file.getPath());
             file.mkdirs();
         }
         Storage storage = new Storage();
@@ -96,6 +98,7 @@ public class StorageService {
                 file = new File(file.getPath()+ "/" + multipartFile.getOriginalFilename());
                 storageDao.saveFile(storage);
                 try {
+                	grantPermission(file.getPath());
 					multipartFile.transferTo(file);
 				} catch (IllegalStateException | IOException e) {
 					e.printStackTrace();
@@ -124,6 +127,7 @@ public class StorageService {
 		storageDao.makeDir(storage);
 		File file = getRealPath(location, user.getId(), dirName);
 		if(file.exists() == false){
+			grantPermission(file.getPath());
 			file.mkdirs();
         }
 		return null;
@@ -189,5 +193,17 @@ public class StorageService {
 
 	public List<Storage> checkLocation(Storage storage) {
 		return storageDao.checkLocation(storage);
+	}
+	
+	private void grantPermission (String path) {
+		String cmd = "chmod 666 " + path; 
+		Runtime rt = Runtime.getRuntime(); 
+		Process p;
+		try {
+			p = rt.exec(cmd);
+			p.waitFor(); 
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		} 
 	}
 }
