@@ -14,7 +14,7 @@ create table users(
     address varchar2(100) not null
 );
 select * from users;
-insert into users values('admin', 'tnc87409123@', '�?리자', 'm', '01075524110', 'tncrja@naver.com', '05707', '?��?�� ?��?���? ?��?���? 88(�??��??림아?��?��) 1?��');
+insert into users values('admin', 'tnc87409123@', '�??리자', 'm', '01075524110', 'tncrja@naver.com', '05707', '?��?�� ?��?���?? ?��?���?? 88(�???��??림아?��?��) 1?��');
 select * from user_constraints where table_name = 'USERS';
 alter table users modify password varchar2(60);
 update users set password = '$2a$10$mulmpBP8.iCG5PT8dQpP3uICKqs5kgGiwjNLIDrQfKYSkWq0dwqde' where id = 'test1';
@@ -72,7 +72,7 @@ create table qna(
 create sequence seq_qna_id;
 
 select * from qna;
-insert into qna values(seq_qna_id.nextval, 'admin', '?��?��?��?��', '?��?��?���? ?��?�� 게시�? ?��?��?��.', 10, '192.168.0.25', sysdate);
+insert into qna values(seq_qna_id.nextval, 'admin', '?��?��?��?��', '?��?��?���?? ?��?�� 게시�?? ?��?��?��.', 10, '192.168.0.25', sysdate);
 
 ------------------------------------------------------------------------------------
 create table notice_reply(
@@ -145,5 +145,5 @@ select * from file_system;
 select * from file_system where users_id = 'admin' and fs_pid = 'aecdbc4c328c4be4bb76b7320edce3fa';
 update file_system set name = 'before.PNG' where users_id = 'admin' and fs_uid = '2f5a2cca98794c9cb90033112d1c7304' and fs_pid is null;
 select * from file_system  where users_id = 'admin' and fs_uid = '2f5a2cca98794c9cb90033112d1c7304' and fs_pid is null;
-select * from file_system where users_id = 'test' and 
 --------------------------------------------------------------------
+select * from users;

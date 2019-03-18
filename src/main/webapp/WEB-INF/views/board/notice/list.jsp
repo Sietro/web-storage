@@ -72,7 +72,7 @@
 													</ul>
 												</div>
 												<div class="text-right">
-													<c:if test="${sessionScope.user.id eq 'admin'}">
+													<c:if test="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username eq 'admin'}">
 													<a href="/board/notice/insert" class="btn btn-primary">글쓰기</a>
 													</c:if>
 												</div>
