@@ -36,17 +36,16 @@
 		border-radius: .25em; 
 	} 
 	.filebox input[type="file"] { 
-	/* 파일 필드 숨기기 */
-	position: absolute; 
-	width: 1px; 
-	height: 1px; 
-	padding: 0; 
-	margin: -1px; 
-	overflow: hidden; 
-	clip:rect(0,0,0,0); 
-	border: 0; 
+		/* 파일 필드 숨기기 */
+		position: absolute; 
+		width: 1px; 
+		height: 1px; 
+		padding: 0; 
+		margin: -1px; 
+		overflow: hidden; 
+		clip:rect(0,0,0,0); 
+		border: 0; 
 	}
-
 </style>
 </head>
 <body id="page-top">
@@ -161,7 +160,7 @@
 														<input type="checkbox" name="checkbox" id="checkbox" onclick="checkboxChecker(this.form)" />
 													</div>
 													<div class="form-content">
-														<button type="submit" class="change_button btn-block">
+														<button type="submit" class="change_button btn-block text-truncate">
 															<img src="/image/folder.jpg" alt="${storage.name }" class="img-fluid" />
 															<br />
 															<span>${storage.name }</span> 
@@ -199,7 +198,7 @@
 														<input type="checkbox" name="checkbox" id="checkbox" onclick="checkboxChecker(this.form);" />
 													</div>
 													<div class="form-content">
-														<button type="submit" class="change_button">
+														<button type="submit" class="change_button btn-block text-truncate">
 															<img src="/image/file.jpg" alt="${storage.name }" class="img-fluid" />
 															<br />
 															<span>${storage.name }</span> 
