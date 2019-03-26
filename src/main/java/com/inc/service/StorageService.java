@@ -201,10 +201,11 @@ public class StorageService {
 		Process p;
 		try {
 			p = rt.exec(cmd);
+			p.waitFor();
 			file.setExecutable(true, false);
 			file.setReadable(true, false);
 			file.setWritable(true, false);
-		} catch (IOException e) {
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		} 
 	}
