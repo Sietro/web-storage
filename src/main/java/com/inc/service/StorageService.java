@@ -204,8 +204,7 @@ public class StorageService {
 			file.setExecutable(true, false);
 			file.setReadable(true, false);
 			file.setWritable(true, false);
-			p.waitFor(); 
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		} 
 	}
