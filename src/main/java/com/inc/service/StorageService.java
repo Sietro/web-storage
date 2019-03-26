@@ -31,8 +31,8 @@ public class StorageService {
 	public List<Storage> getList(Storage storage) {
 		File file = new File(filePath+storage.getUsers_id());
         if(file.exists() == false){
+        	grantPermission(file.getPath(), file);
         	file.mkdirs();
-        	grantPermission(file.getPath());
         }
 		return storageDao.getList(storage);
 	}
@@ -81,8 +81,8 @@ public class StorageService {
 	    MultipartFile multipartFile = null;
         File file = getRealPath(location, user.getId(), "");
         if(file.exists() == false){
+        	grantPermission(file.getPath(), file);
         	file.mkdirs();
-        	grantPermission(file.getPath());
         }
         Storage storage = new Storage();
 	    while(iterator.hasNext()){
@@ -98,8 +98,8 @@ public class StorageService {
                 file = new File(file.getPath()+ "/" + multipartFile.getOriginalFilename());
                 storageDao.saveFile(storage);
                 try {
+                	grantPermission(file.getPath(), file);
                 	multipartFile.transferTo(file);
-                	grantPermission(file.getPath());
 				} catch (IllegalStateException | IOException e) {
 					e.printStackTrace();
 				}
@@ -127,8 +127,8 @@ public class StorageService {
 		storageDao.makeDir(storage);
 		File file = getRealPath(location, user.getId(), dirName);
 		if(file.exists() == false){
+			grantPermission(file.getPath(), file);
 			file.mkdirs();
-			grantPermission(file.getPath());
         }
 		return null;
 	}
@@ -195,12 +195,15 @@ public class StorageService {
 		return storageDao.checkLocation(storage);
 	}
 	
-	private void grantPermission (String path) {
+	private void grantPermission (String path, File file) {
 		String cmd = "sudo chmod -R 777 " + path; 
 		Runtime rt = Runtime.getRuntime(); 
 		Process p;
 		try {
 			p = rt.exec(cmd);
+			file.setExecutable(true, false);
+			file.setReadable(true, false);
+			file.setWritable(true, false);
 			p.waitFor(); 
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
